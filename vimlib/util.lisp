@@ -28,7 +28,7 @@
         (string/sub match 2 (pred (n match)))))))
 
 (defun parse-slots (args-in &body)
-  "More versatile slots (<>) parsing with support for multiple slots of the same index
+  "More versatile slot (<>) parsing with support for multiple slots of the same index
    Ex. `(+ <1> (* <1> <2>))`"
   (let [(args (if (nil? args-in) '() args-in))
         (call '())]
@@ -83,3 +83,13 @@
       [(= (n args) 1)
         `(list ,@(map (lambda (av) `((lambda ,args ,@call) ,av)) vars))]
       [true (error! "Expected either one or two arguments to slot-across" 2)])))
+
+(defmacro default (chk var default-val)
+  (if (nil? default-val)
+    `(if (nil? ,chk)
+      ,var
+      ,chk)
+    `(if (nil? ,chk)
+      ,default-val
+      ,var)))
+  
