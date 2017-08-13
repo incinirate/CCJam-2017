@@ -3,7 +3,7 @@ if not table.unpack then table.unpack = unpack end
 local load = load if _VERSION:find("5.1") then load = function(x, n, _, env) local f, e = loadstring(x, n) if not f then return f, e end if env then setfenv(f, env) end return f end end
 local _select, _unpack, _pack, _error = select, table.unpack, table.pack, error
 local _libs = {}
-local _3d_1, _2f3d_1, _3c_1, _3c3d_1, _3e_1, _3e3d_1, _2b_1, _2d_1, _2f_1, _25_1, _2e2e_1, len_23_1, error1, getmetatable1, next1, print1, getIdx1, setIdx_21_1, setmetatable1, tostring1, type_23_1, n1, slice1, format1, rep1, sub1, concat1, unpack1, list1, cons1, pretty1, apply1, empty_3f_1, type1, min1, random1, car1, cdr1, cons2, map1, nub1, nth1, nths1, pushCdr_21_1, append1, range1, lens1, getter_3f_1, setter_3f_1, _5e2e_1, _5e7e_1, head1, on_21_1, call1, setCursorPos1, blit1, clear1, getSize1, write1, setBackgroundColor1, genLv1, setPixel1, drawBuff1, genBuffer1, screenBuffer1, pullEvent1, startTimer1, green1, draw1, left1, update1
+local _3d_1, _2f3d_1, _3c_1, _3c3d_1, _3e_1, _3e3d_1, _2b_1, _2d_1, _2f_1, _25_1, _2e2e_1, len_23_1, error1, getmetatable1, next1, print1, getIdx1, setIdx_21_1, setmetatable1, tostring1, type_23_1, n1, slice1, format1, rep1, sub1, concat1, unpack1, list1, cons1, pretty1, empty_3f_1, type1, min1, random1, car1, cdr1, cons2, map1, nub1, nth1, nths1, pushCdr_21_1, append1, range1, lens1, getter_3f_1, setter_3f_1, _5e2e_1, _5e7e_1, head1, on_21_1, call1, setCursorPos1, blit1, clear1, getSize1, write1, setBackgroundColor1, genLv1, setPixel1, drawBuff1, genBuffer1, screenBuffer1, pullEvent1, startTimer1, green1, draw1, left1, update1
 _3d_1 = function(v1, v2) return v1 == v2 end
 _2f3d_1 = function(v1, v2) return v1 ~= v2 end
 _3c_1 = function(v1, v2) return v1 < v2 end
@@ -108,29 +108,6 @@ pretty1 = (function(value)
 		return tostring1(value)
 	end
 end)
-apply1 = (function(f, ...)
-	local _n = _select("#", ...) - 1
-	local xss, xs
-	if _n > 0 then
-		xss = { tag="list", n=_n, _unpack(_pack(...), 1, _n)}
-		xs = select(_n + 1, ...)
-	else
-		xss = { tag="list", n=0}
-		xs = ...
-	end
-	local args = (function()
-		local _offset, _result, _temp = 0, {tag="list",n=0}
-		_temp = xss
-		for _c = 1, _temp.n do _result[0 + _c + _offset] = _temp[_c] end
-		_offset = _offset + _temp.n
-		_temp = xs
-		for _c = 1, _temp.n do _result[0 + _c + _offset] = _temp[_c] end
-		_offset = _offset + _temp.n
-		_result.n = _offset + 0
-		return _result
-	end)()
-	return f(unpack1(args, 1, n1(args)))
-end)
 empty_3f_1 = (function(x)
 	local xt = type1(x)
 	if xt == "list" then
@@ -204,10 +181,12 @@ map1 = (function(fn, ...)
 	end
 	ns = out
 	local out = ({tag = "list", n = 0})
-	local temp = apply1(min1, ns)
+	local temp = min1(unpack1(ns, 1, n1(ns)))
 	local temp1 = 1
 	while temp1 <= temp do
-		pushCdr_21_1(out, apply1(fn, nths1(xss, temp1)))
+		pushCdr_21_1(out, (function(xs)
+			return fn(unpack1(xs, 1, n1(xs)))
+		end)(nths1(xss, temp1)))
 		temp1 = temp1 + 1
 	end
 	return out
@@ -358,45 +337,33 @@ genLv1 = (function(val, size)
 	return out
 end)
 setPixel1 = (function(buff, x, y, d, b, f)
-	(function()
-		if not (type_23_1(d) == "nil") then
-			local val, lens = nth1(buff["cur-rep"], y), on_21_1(1)
-			local new
-			local temp = nth1(nth1(buff["cur-rep"], y), 1)
-			new = sub1(temp, 1, x - 1) .. d .. sub1(temp, x + 1)
-			return _5e7e_1(val, lens, (function(x1)
-				return new
-			end))
-		else
-			return nil
-		end
-	end)()()()
-	(function()
-		if not (type_23_1(b) == "nil") then
-			local val, lens = nth1(buff["cur-rep"], y), on_21_1(2)
-			local new
-			local temp = nth1(nth1(buff["cur-rep"], y), 2)
-			new = sub1(temp, 1, x - 1) .. b .. sub1(temp, x + 1)
-			return _5e7e_1(val, lens, (function(x1)
-				return new
-			end))
-		else
-			return nil
-		end
-	end)()()()
-	(function()
-		if not (type_23_1(f) == "nil") then
-			local val, lens = nth1(buff["cur-rep"], y), on_21_1(3)
-			local new
-			local temp = nth1(nth1(buff["cur-rep"], y), 3)
-			new = sub1(temp, 1, x - 1) .. f .. sub1(temp, x + 1)
-			return _5e7e_1(val, lens, (function(x1)
-				return new
-			end))
-		else
-			return nil
-		end
-	end)()()()
+	if not (type_23_1(d) == "nil") then
+		local val, lens = nth1(buff["cur-rep"], y), on_21_1(1)
+		local new
+		local temp = nth1(nth1(buff["cur-rep"], y), 1)
+		new = sub1(temp, 1, x - 1) .. d .. sub1(temp, x + 1)
+		_5e7e_1(val, lens, (function(x1)
+			return new
+		end))
+	end
+	if not (type_23_1(b) == "nil") then
+		local val, lens = nth1(buff["cur-rep"], y), on_21_1(2)
+		local new
+		local temp = nth1(nth1(buff["cur-rep"], y), 2)
+		new = sub1(temp, 1, x - 1) .. b .. sub1(temp, x + 1)
+		_5e7e_1(val, lens, (function(x1)
+			return new
+		end))
+	end
+	if not (type_23_1(f) == "nil") then
+		local val, lens = nth1(buff["cur-rep"], y), on_21_1(3)
+		local new
+		local temp = nth1(nth1(buff["cur-rep"], y), 3)
+		new = sub1(temp, 1, x - 1) .. f .. sub1(temp, x + 1)
+		_5e7e_1(val, lens, (function(x1)
+			return new
+		end))
+	end
 	return _5e7e_1(buff["old-rep"], on_21_1(y), (function(x1)
 		return true
 	end))
@@ -408,7 +375,8 @@ drawBuff1 = (function(buff)
 		local crep, orep = nth1(buff["cur-rep"], temp1), nth1(buff["old-rep"], temp1)
 		if orep then
 			setCursorPos1(1, temp1)
-			apply1(blit1, list1(nth1(crep, 1)()(), nth1(crep, 3)()(), nth1(crep, 2)()()))
+			local xs = list1(nth1(crep, 1), nth1(crep, 3), nth1(crep, 2))
+			blit1(unpack1(xs, 1, n1(xs)))
 			_5e7e_1(buff["old-rep"], on_21_1(temp1), (function(x)
 				return false
 			end))

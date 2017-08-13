@@ -11,9 +11,10 @@
 
 (defun set-pixel (buff x y d b f)
   "Set the pixel X, Y of BUFF with the values D (text), B (bg), and F (fg)"
+  
   (cut-across (d b f)
-    (when (! (nil? <>))
-      (inset-one buff x y <2> <1>)))
+    when (! (nil? <>)) (inset-one buff x y <2> <1>))
+
   (^= (.> buff :old-rep) (on! y) true))
 
 (defun draw-buff (buff)
@@ -24,7 +25,7 @@
       (when orep
         (term/setCursorPos 1 i)
         (apply term/blit (slot-across (1 3 2)
-                           (nth crep <>)))
+                          nth crep <>))
         (^= (.> buff :old-rep) (on! i) false)))))
 
 (defun gen-buffer (w h)

@@ -64,9 +64,9 @@
       [(= (n args) 2)
         `(progn ,@(map (lambda (av) 
                          (inc! counter)
-                         `((lambda ,args ,call) ,av ,counter)) vars))]
+                         `((lambda ,args ,@call) ,av ,counter)) vars))]
       [(= (n args) 1)
-        `(progn ,@(map (lambda (av) `((lambda ,args ,call) ,av)) vars))]
+        `(progn ,@(map (lambda (av) `((lambda ,args ,@call) ,av)) vars))]
       [true (error! "Expected either one or two arguments to cut-across" 2)])))
 
 (defmacro slot-across (vars &func)
@@ -79,7 +79,7 @@
       [(= (n args) 2)
         `(list ,@(map (lambda (av) 
                          (inc! counter)
-                         `((lambda ,args ,call) ,av ,counter)) vars))]
+                         `((lambda ,args ,@call) ,av ,counter)) vars))]
       [(= (n args) 1)
-        `(list ,@(map (lambda (av) `((lambda ,args ,call) ,av)) vars))]
+        `(list ,@(map (lambda (av) `((lambda ,args ,@call) ,av)) vars))]
       [true (error! "Expected either one or two arguments to slot-across" 2)])))
