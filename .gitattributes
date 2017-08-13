@@ -1,4 +1,4 @@
-ccvim.lua linguist-generated
+vim.lua linguist-generated
 extlib/* linguist-vendored
 
 *.lisp linguist-language=lisp
