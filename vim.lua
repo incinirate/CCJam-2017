@@ -3,7 +3,7 @@ if not table.unpack then table.unpack = unpack end
 local load = load if _VERSION:find("5.1") then load = function(x, n, _, env) local f, e = loadstring(x, n) if not f then return f, e end if env then setfenv(f, env) end return f end end
 local _select, _unpack, _pack, _error = select, table.unpack, table.pack, error
 local _libs = {}
-local _3d_1, _2f3d_1, _3c_1, _3c3d_1, _3e_1, _3e3d_1, _2b_1, _2d_1, _2e2e_1, len_23_1, error1, getmetatable1, next1, print1, getIdx1, setIdx_21_1, setmetatable1, tostring1, type_23_1, n1, slice1, find1, format1, rep1, sub1, concat1, unpack1, list1, cons1, pretty1, type1, car1, nth1, pushCdr_21_1, append1, cadr1, split1, lens1, getter_3f_1, setter_3f_1, _5e2e_1, _5e7e_1, on1, on_21_1, setCursorPos1, blit1, getSize1, genLv1, drawBuff1, genBuffer1, screenBuffer1, pullEvent1, queueEvent1, genContainer1, initBuffer1, genHandle1, openHand1, closeHand1, cleanHand1, readHand1, writeHand1, imanagerVars1, init1, update1, vimVars1
+local _3d_1, _2f3d_1, _3c_1, _3c3d_1, _3e_1, _3e3d_1, _2b_1, _2d_1, _2e2e_1, len_23_1, error1, getmetatable1, next1, print1, getIdx1, setIdx_21_1, setmetatable1, tostring1, type_23_1, n1, slice1, find1, format1, rep1, sub1, concat1, unpack1, list1, cons1, pretty1, apply1, type1, car1, nth1, pushCdr_21_1, append1, cadr1, split1, lens1, getter_3f_1, setter_3f_1, _5e2e_1, _5e7e_1, on1, on_21_1, setCursorPos1, blit1, getSize1, genLv1, drawBuff1, genBuffer1, screenBuffer1, pullEvent1, queueEvent1, genContainer1, initBuffer1, genHandle1, openHand1, closeHand1, cleanHand1, readHand1, writeHand1, imanagerVars1, init1, update1, vimVars1
 _3d_1 = function(v1, v2) return v1 == v2 end
 _2f3d_1 = function(v1, v2) return v1 ~= v2 end
 _3c_1 = function(v1, v2) return v1 < v2 end
@@ -106,6 +106,29 @@ pretty1 = (function(value)
 	else
 		return tostring1(value)
 	end
+end)
+apply1 = (function(f, ...)
+	local _n = _select("#", ...) - 1
+	local xss, xs
+	if _n > 0 then
+		xss = { tag="list", n=_n, _unpack(_pack(...), 1, _n)}
+		xs = select(_n + 1, ...)
+	else
+		xss = { tag="list", n=0}
+		xs = ...
+	end
+	local args = (function()
+		local _offset, _result, _temp = 0, {tag="list",n=0}
+		_temp = xss
+		for _c = 1, _temp.n do _result[0 + _c + _offset] = _temp[_c] end
+		_offset = _offset + _temp.n
+		_temp = xs
+		for _c = 1, _temp.n do _result[0 + _c + _offset] = _temp[_c] end
+		_offset = _offset + _temp.n
+		_result.n = _offset + 0
+		return _result
+	end)()
+	return f(unpack1(args, 1, n1(args)))
 end)
 type1 = (function(val)
 	local ty = type_23_1(val)
@@ -258,8 +281,7 @@ drawBuff1 = (function(buff)
 		local crep, orep = nth1(buff["cur-rep"], temp1), nth1(buff["old-rep"], temp1)
 		if orep then
 			setCursorPos1(1, temp1)
-			local xs = list1(nth1(crep, 1), nth1(crep, 3), nth1(crep, 2))
-			blit1(unpack1(xs, 1, n1(xs)))
+			apply1(blit1, list1(nth1(crep, 1), nth1(crep, 3), nth1(crep, 2)))
 			_5e7e_1(buff["old-rep"], on_21_1(temp1), (function(x)
 				return false
 			end))
