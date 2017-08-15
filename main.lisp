@@ -2,6 +2,10 @@
 
 (import vimlib/imanager)
 
+(import vimlib/parse/parser parser)
+
+(parser/gen-parser)
+
 (define vim-vars { :state "normal"
                    :running true })
 

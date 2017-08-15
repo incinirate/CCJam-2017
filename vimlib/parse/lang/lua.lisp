@@ -82,5 +82,3 @@
           [true "string"]))]
     [else
       (error! (.. "Invalid parse state `" (.> state :c-token) "`"))]))
-
-(next-token `(,{} ,{}))
