@@ -3,7 +3,7 @@ if not table.unpack then table.unpack = unpack end
 local load = load if _VERSION:find("5.1") then load = function(x, n, _, env) local f, e = loadstring(x, n) if not f then return f, e end if env then setfenv(f, env) end return f end end
 local _select, _unpack, _pack, _error = select, table.unpack, table.pack, error
 local _libs = {}
-local _3d_1, _2f3d_1, _3c_1, _3c3d_1, _3e_1, _3e3d_1, _2b_1, _2d_1, _25_1, _2e2e_1, arg_23_1, len_23_1, error1, getmetatable1, next1, print1, getIdx1, setIdx_21_1, setmetatable1, tostring1, type_23_1, n1, slice1, find1, format1, lower1, match1, rep1, sub1, upper1, concat1, unpack1, list1, cons1, pretty1, arg1, apply1, first1, empty_3f_1, string_3f_1, number_3f_1, type1, car1, partition1, nth1, pushCdr_21_1, append1, cadr1, split1, exit1, getenv1, lens1, getter_3f_1, setter_3f_1, _5e2e_1, _5e7e_1, on1, on_21_1, exit_21_1, config1, coloredAnsi1, colored_3f_1, colored1, create1, setAction1, addAction1, addArgument_21_1, addHelp_21_1, usageNarg_21_1, usage_21_1, helpArgs_21_1, help_21_1, matcher1, parse_21_1, setCursorPos1, blit1, getSize1, genLv1, drawBuff1, genBuffer1, screenBuffer1, pullEvent1, queueEvent1, genContainer1, initBuffer1, genHandle1, openHand1, closeHand1, cleanHand1, readHand1, writeHand1, imanagerVars1, init1, update1, vimVars1
+local _3d_1, _2f3d_1, _3c_1, _3c3d_1, _3e_1, _3e3d_1, _2b_1, _2d_1, _25_1, _2e2e_1, arg_23_1, len_23_1, error1, getmetatable1, next1, print1, getIdx1, setIdx_21_1, setmetatable1, tostring1, type_23_1, n1, slice1, find1, format1, lower1, match1, rep1, sub1, upper1, concat1, unpack1, list1, cons1, pretty1, arg1, apply1, first1, empty_3f_1, string_3f_1, number_3f_1, type1, max1, car1, cdr1, partition1, nth1, pushCdr_21_1, append1, reverse1, cadr1, split1, keys1, createLookup1, exit1, getenv1, invokable_3f_1, compose1, lens1, getter_3f_1, setter_3f_1, composeInner1, _3c3e_1, _5e2e_1, _5e7e_1, on1, on_21_1, exit_21_1, self1, config1, coloredAnsi1, colored_3f_1, colored1, create1, setAction1, addAction1, addArgument_21_1, addHelp_21_1, usageNarg_21_1, usage_21_1, helpArgs_21_1, help_21_1, matcher1, parse_21_1, setCursorPos1, blit1, getSize1, genLv1, drawBuff1, genBuffer1, screenBuffer1, pullEvent1, queueEvent1, genContainer1, initBuffer1, genHandle1, openHand1, closeHand1, cleanHand1, readHand1, writeHand1, imanagerVars1, init1, update1, keywords1, api1, escapable1, initState1, nextToken1, langApi1, genParser1, prevState1, vimVars1
 _3d_1 = function(v1, v2) return v1 == v2 end
 _2f3d_1 = function(v1, v2) return v1 ~= v2 end
 _3c_1 = function(v1, v2) return v1 < v2 end
@@ -172,12 +172,24 @@ type1 = (function(val)
 		return ty
 	end
 end)
+max1 = math.max
 car1 = (function(x)
 	local temp = type1(x)
 	if temp ~= "list" then
 		error1(format1("bad argument %s (expected %s, got %s)", "x", "list", temp), 2)
 	end
 	return x[1]
+end)
+cdr1 = (function(x)
+	local temp = type1(x)
+	if temp ~= "list" then
+		error1(format1("bad argument %s (expected %s, got %s)", "x", "list", temp), 2)
+	end
+	if empty_3f_1(x) then
+		return ({tag = "list", n = 0})
+	else
+		return slice1(x, 2)
+	end
 end)
 partition1 = (function(p, xs)
 	local temp = type1(p)
@@ -232,6 +244,15 @@ append1 = (function(xs, ys)
 	_result.n = _offset + 0
 	return _result
 end)
+reverse1 = (function(xs)
+	local out = ({tag = "list", n = 0})
+	local temp = n1(xs)
+	while temp >= 1 do
+		pushCdr_21_1(out, nth1(xs, temp))
+		temp = temp + -1
+	end
+	return out
+end)
 cadr1 = (function(xs)
 	local temp = type1(xs)
 	if temp ~= "list" then
@@ -263,8 +284,56 @@ split1 = (function(text, pattern, limit)
 	end
 	return out
 end)
+keys1 = (function(st)
+	local out = ({tag = "list", n = 0})
+	local temp, _ = next1(st)
+	while temp ~= nil do
+		pushCdr_21_1(out, temp)
+		temp, _ = next1(st, temp)
+	end
+	return out
+end)
+createLookup1 = (function(values)
+	local res = ({})
+	local temp = n1(values)
+	local temp1 = 1
+	while temp1 <= temp do
+		res[nth1(values, temp1)] = temp1
+		temp1 = temp1 + 1
+	end
+	return res
+end)
 exit1 = os.exit
 getenv1 = os.getenv
+invokable_3f_1 = (function(x)
+	while true do
+		local temp = type1(x) == "function"
+		if temp then
+			return temp
+		else
+			local temp1 = type_23_1(x) == "table"
+			if temp1 then
+				local temp2 = type_23_1((getmetatable1(x))) == "table"
+				if temp2 then
+					x = getmetatable1(x)["__call"]
+				else
+					return temp2
+				end
+			else
+				return temp1
+			end
+		end
+	end
+end)
+compose1 = (function(f, g)
+	if invokable_3f_1(f) and invokable_3f_1(g) then
+		return (function(x)
+			return f(g(x))
+		end)
+	else
+		return nil
+	end
+end)
 lens1 = (function(view, over)
 	return setmetatable1(({["tag"]="lens",["view"]=view,["over"]=over}), ({["__call"]=(function(t, x)
 		return _5e2e_1(x, t)
@@ -275,6 +344,42 @@ getter_3f_1 = (function(lens)
 end)
 setter_3f_1 = (function(lens)
 	return lens["tag"] == "lens" and type1((lens["over"])) == "function"
+end)
+composeInner1 = (function(l1, l2)
+	local view1, view2, over1, over2 = l1["view"], l2["view"], l1["over"], l2["over"]
+	return lens1((function()
+		if view1 and view2 then
+			return compose1(view2, view1)
+		else
+			return nil
+		end
+	end)(), (function()
+		if over1 and over2 then
+			return (function(f, x)
+				return over1((function(x1)
+					return over2(f, x1)
+				end), x)
+			end)
+		else
+			return nil
+		end
+	end)())
+end)
+_3c3e_1 = (function(...)
+	local lenses = _pack(...) lenses.tag = "list"
+	local _7c3e_
+	_7c3e_ = (function(x)
+		if n1(x) == 1 then
+			return car1(x)
+		elseif n1(x) == 2 then
+			return composeInner1(car1(x), cadr1(x))
+		elseif n1(x) > 2 then
+			return composeInner1(car1(x), _7c3e_(cdr1(x)))
+		else
+			_error("unmatched item")
+		end
+	end)
+	return _7c3e_(reverse1(lenses))
 end)
 _5e2e_1 = (function(val, lens)
 	if getter_3f_1(lens) then
@@ -333,6 +438,10 @@ exit_21_1 = (function(reason, code)
 		local x
 		return error1(nil, 0)
 	end
+end)
+self1 = (function(x, key, ...)
+	local args = _pack(...) args.tag = "list"
+	return x[key](x, unpack1(args, 1, n1(args)))
 end)
 config1 = package.config
 coloredAnsi1 = (function(col, msg)
@@ -885,11 +994,10 @@ cleanHand1 = (function(handle)
 	return nil
 end)
 readHand1 = (function(handle, amount)
-	local lines = split1(_5e2e_1(handle["data"], on1("text")), "[^\n]+", amount + _5e2e_1(handle["data"], on1("ptr")))
-	slice1(lines, _5e2e_1(handle["data"], on1("ptr")) + 1, nil)
-	local val, lens, new = handle["data"], on_21_1("ptr"), amount + _5e2e_1(handle["data"], on1("ptr"))
-	_5e7e_1(val, lens, (function(x)
-		return new
+	local lines = split1(_5e2e_1(handle, _3c3e_1(on1("text"), on1("data"))), "[^\n]+", amount + _5e2e_1(handle, _3c3e_1(on1("ptr"), on1("data"))))
+	slice1(lines, _5e2e_1(handle, _3c3e_1(on1("ptr"), on1("data"))) + 1, nil)
+	_5e7e_1(handle, _3c3e_1(on_21_1("ptr"), on1("data")), (function(temp)
+		return temp + amount
 	end))
 	return lines
 end)
@@ -897,10 +1005,8 @@ writeHand1 = (function(handle, data)
 	if not (handle["data"]["openmode"] == 2) then
 		error1("Handle not opened in write mode", 0)
 	end
-	local lens, val = on_21_1("text"), handle["data"]
-	local new = _2e2e_1(_5e2e_1(handle["data"], lens))
-	return _5e7e_1(val, lens, (function(x)
-		return new
+	return _5e7e_1(handle, _3c3e_1(on_21_1("text"), on1("data")), (function(temp)
+		return temp .. data
 	end))
 end)
 imanagerVars1 = ({})
@@ -918,6 +1024,117 @@ update1 = (function()
 	local cont = imanagerVars1["container"]
 	return nil
 end)
+keywords1 = createLookup1(({tag = "list", n = 21, ({tag="key", value="and"}), ({tag="key", value="break"}), ({tag="key", value="do"}), ({tag="key", value="else"}), ({tag="key", value="elseif"}), ({tag="key", value="end"}), ({tag="key", value="false"}), ({tag="key", value="for"}), ({tag="key", value="function"}), ({tag="key", value="if"}), ({tag="key", value="in"}), ({tag="key", value="local"}), ({tag="key", value="nil"}), ({tag="key", value="not"}), ({tag="key", value="or"}), ({tag="key", value="repeat"}), ({tag="key", value="return"}), ({tag="key", value="then"}), ({tag="key", value="true"}), ({tag="key", value="until"}), ({tag="key", value="while"})}))
+api1 = createLookup1(({tag = "list", n = 1, ({tag="key", value="drawPixel"})}))
+escapable1 = createLookup1(({tag = "list", n = 10, ({tag="key", value="a"}), ({tag="key", value="b"}), ({tag="key", value="f"}), ({tag="key", value="n"}), ({tag="key", value="r"}), ({tag="key", value="t"}), ({tag="key", value="v"}), "\\", "\"", "'"}))
+initState1 = (function()
+	return ({["c-token"]="root",["starter"]=""})
+end)
+nextToken1 = (function(stream, state)
+	local temp = state["c-token"]
+	if temp == "root" then
+		local char = self1(stream, "next")
+		if char == "-" and self1(stream, "eat", "%-") then
+			if self1(stream, "match", "%[%[") then
+				if self1(stream, "skip-to", "%]%]") then
+					self1(stream, "next")
+					state["c-token"] = "root"
+				else
+					self1(stream, "skip-to-end")
+				end
+				return "comment"
+			else
+				self1(stream, "skip-to-end")
+				return "comment"
+			end
+		elseif char == "\"" or char == "'" then
+			state["c-token"] = "string"
+			state["starter"] = char
+			return "string"
+		elseif char == "." and self1(stream, "match", "%d+") then
+			return "number"
+		elseif char == "0" and self1(stream, "eat", "[xX]") then
+			self1(stream, "eat-while", "%x")
+			return "number"
+		elseif find1(char, "%d") then
+			self1(stream, "eat-while", "%d")
+			self1(stream, "match", "\\.%d+")
+			if find1(self1(stream, "peek") or "", "[%w_]") then
+				return "other"
+			else
+				return "number"
+			end
+		elseif char == "[" and self1(stream, "eat", "%[") then
+			state["c-token"] = "multiline-string"
+			return "string"
+		elseif find1(char, "[%w_]") then
+			self1(stream, "eat-while", "[%w_]")
+			local word = self1(stream, "current")
+			if keywords1[word] then
+				return "keyword"
+			elseif api1[word] then
+				return "api"
+			else
+				return "other"
+			end
+		else
+			return "other"
+		end
+	elseif temp == "string" then
+		local char = self1(stream, "next")
+		if char == "\\" then
+			local escaped = self1(stream, "peek")
+			if escaped and escapable1[escaped] then
+				self1(stream, "next")
+				return "escape"
+			else
+				return "string"
+			end
+		elseif char == state["starter"] then
+			state["starter"] = ""
+			state["c-token"] = "root"
+			return nil
+		elseif self1(stream, "eol") then
+			state["c-token"] = "root"
+			return nil
+		else
+			return "string"
+		end
+	elseif temp == "multiline-string" then
+		local char = self1(stream, "next")
+		if char == "\\" then
+			local escaped = self1(stream, "peek")
+			if escaped and escapable1[escaped] then
+				self1(stream, "next")
+				return "escape"
+			else
+				return "string"
+			end
+		elseif char == "]" and self1(stream, "eat", "%]") then
+			state["c-token"] = "root"
+			return "string"
+		else
+			return "string"
+		end
+	else
+		return error1("Invalid parse state `" .. state["c-token"] .. "`")
+	end
+end)
+langApi1 = ({["lua"]=({["init-state"]=initState1,["next-token"]=nextToken1})})
+genParser1 = (function(lang)
+	return ({["lang"]=lang,["cache"]=({}),["state"]=langApi1[_3c3e_1(on1("init-state"), on1(lang))],["prev-state"]=prevState1})
+end)
+prevState1 = (function(parser, lineIndex)
+	local idx = apply1(max1, append1(first1(partition1((function(temp)
+		return temp < lineIndex
+	end), (keys1(parser["cache"])))), ({tag = "list", n = 1, 0})))
+	if idx > 0 then
+		return parser["cache"][idx]
+	else
+		return nil
+	end
+end)
+genParser1()
 vimVars1 = ({["state"]="normal",["running"]=true})
 local spec = create1()
 addHelp_21_1(spec)

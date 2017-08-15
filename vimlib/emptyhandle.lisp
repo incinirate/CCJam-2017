@@ -19,16 +19,18 @@
   "Call this when no more work is to be done with HANDLE"
   nil)
 
-(defun read-hand (handle amount) ;; TODO: Make this function less suck
+(defun read-hand (handle amount)
   "Reads AMOUNT lines from HANDLE"
-  (with (lines (string/split (^. (.> handle :data) (on :text)) "[^\n]+" (+ amount (^. (.> handle :data) (on :ptr)))))
-    (drop lines (^. (.> handle :data) (on :ptr)))
-    (^= (.> handle :data) (on! :ptr) (+ amount (^. (.> handle :data) (on :ptr))))
+  (with (lines (string/split 
+                  (^. handle (<> (on :text) (on :data))) "[^\n]+"
+                  (+ amount (^. handle (<> (on :ptr) (on :data))))))
+    (drop lines (^. handle (<> (on :ptr) (on :data))))
+    (^~ handle (<> (on! :ptr) (on :data)) (cut + <> amount))
     lines))
 
 (defun write-hand (handle data)
   "Writes DATA to HANDLE"
   (assert! (= (.> (.> handle :data) :openmode) enums/*mode-write*)
     "Handle not opened in write mode")
-  (with (lens (on! :text))
-    (^= (.> handle :data) lens (.. (^. (.> handle :data) lens)))))
+
+  (^~ handle (<> (on! :text) (on :data)) (cut .. <> data)))
