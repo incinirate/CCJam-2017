@@ -37,4 +37,3 @@
     :height h })
 
 (define screen-buffer (gen-buffer (term/getSize)))
-(print! "Buffer loaded!")
