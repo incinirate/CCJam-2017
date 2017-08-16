@@ -9,6 +9,7 @@
     :starter "" })
 
 (defun next-token (stream state)
+  (print! "c" (self stream :current))
   (case (.> state :c-token)
     ["root"
       (with (char (self stream :next))

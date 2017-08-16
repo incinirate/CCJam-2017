@@ -93,3 +93,24 @@
       ,default-val
       ,var)))
   
+(defmacro for-eachi (vars lst &body)
+  "Perform the set of actions BODY for all values in LST, binding the current key value pair to VARS.
+
+   ### Example:
+   ```cl
+   > (for-eachi (i var) '(\"a\" \"b\" \"c\")
+   .   (print! ($ \"[~{i}]: ~{var}\")))
+   [1]: a
+   [2]: b
+   [3]: c
+   out = nil
+   ```"
+  (assert-type! vars list)
+  (let* [(ctr' (gensym))
+         (lst' (gensym))]
+    `(with (,lst' ,lst)
+       (for ,ctr' 1 (n ,lst') 1 (let [(,(nth vars 1) ,ctr')
+                                      (,(nth vars 2) (.> ,lst' ,ctr'))] ,@body)))))
+
+(defmacro lkeys (lst)
+  `(range :from 1 :to ,(n lst)))

@@ -1,4 +1,5 @@
 (defun gen-stream (string)
+  (print! "GEN WIT " string)
   { :string string
     :start 1
     :pos 1
@@ -13,8 +14,8 @@
 
 (defun match (stream pattern)
   (with ((start end) (string/find (.> stream :string) pattern (.> stream :pos)))
-    (when (= start (.> self :pos))
-      (.<! self :pos (+ end 1))
+    (when (= start (.> stream :pos))
+      (.<! stream :pos (+ end 1))
       true)))
 
 (defun eat (stream pattern)

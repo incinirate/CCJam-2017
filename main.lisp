@@ -5,7 +5,14 @@
 
 (import vimlib/parse/parser parser)
 
-(parser/gen-parser)
+
+(import vimlib/util (for-eachi))
+
+(for-eachi (k v) '("a" "b")
+  (print! k v))
+
+(with (parser (parser/gen-parser "lua"))
+  (print! (pretty (self parser :parse-lines '("return") 1))))
 
 (define vim-vars { :state "normal"
                    :running true })
