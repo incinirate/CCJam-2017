@@ -52,5 +52,3 @@
 
 (defun current (stream)
   (string/sub (.> stream :string) (.> stream :start) (- (.> stream :pos) 1)))
-
-(gen-stream "Hey")

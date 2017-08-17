@@ -11,7 +11,7 @@
 
 (defun open-hand (handle mode)
   "Opens HANDLE for MODE (*mode-read* or *mode-write*)"
-  nil)
+  (.<! handle :data :ptr 0))
 (defun close-hand (handle)
   "Exits the currently active mode for HANDLE"
   nil)
@@ -22,7 +22,7 @@
 (defun read-hand (handle amount)
   "Reads AMOUNT lines from HANDLE"
   (with (lines (string/split 
-                  (^. handle (<> (on :text) (on :data))) "[^\n]+"
+                  (.> handle :text :data) "[^\n]+"
                   (+ amount (^. handle (<> (on :ptr) (on :data))))))
     (drop lines (^. handle (<> (on :ptr) (on :data))))
     (^~ handle (<> (on! :ptr) (on :data)) (cut + <> amount))
@@ -30,7 +30,7 @@
 
 (defun write-hand (handle data)
   "Writes DATA to HANDLE"
-  (assert! (= (.> (.> handle :data) :openmode) enums/*mode-write*)
+  (assert! (= (.> handle :data :openmode) enums/*mode-write*)
     "Handle not opened in write mode")
 
-  (^~ handle (<> (on! :text) (on :data)) (cut .. <> data)))
+  (.<! handle :data :text data))

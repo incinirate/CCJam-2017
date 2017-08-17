@@ -9,7 +9,8 @@
     (with (new-buff { :handle file-handle
                       :cdata ""
                       :meta meta })
-      (fill-data new-buff))))
+      (fill-data new-buff)
+      new-buff)))
 
 (defun set-size (buffer size)
   )
