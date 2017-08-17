@@ -1,6 +1,6 @@
 (define keywords (create-lookup
-  '(:and :break :do :else :elseif :end :false :for :function :if :in
-    :local :nil :not :or :repeat :return :then :true :until :while)))
+  '("and" "break" "do" "else" "elseif" "end" "false" "for" "function" "if" "in"
+    "local" "nil" "not" "or" "repeat" "return" "then" "true" "until" "while")))
 (define api (create-lookup '(:drawPixel)))
 (define escapable (create-lookup '(:a :b :f :n :r :t :v "\\" "\"" "'")))
 
@@ -9,7 +9,6 @@
     :starter "" })
 
 (defun next-token (stream state)
-  (print! "c" (self stream :current))
   (case (.> state :c-token)
     ["root"
       (with (char (self stream :next))
@@ -47,7 +46,7 @@
             (self stream :eat-while "[%w_]")
             (with (word (self stream :current))
               (cond
-                [(.> keywords word) "keyword"]
+                [(exists? (.> keywords word)) "keyword"]
                 [(.> api word) "api"]
                 [true "other"]))]
           [true "other"]))]

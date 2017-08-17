@@ -3,7 +3,7 @@ if not table.unpack then table.unpack = unpack end
 local load = load if _VERSION:find("5.1") then load = function(x, n, _, env) local f, e = loadstring(x, n) if not f then return f, e end if env then setfenv(f, env) end return f end end
 local _select, _unpack, _pack, _error = select, table.unpack, table.pack, error
 local _libs = {}
-local _3d_1, _2f3d_1, _3c_1, _3c3d_1, _3e_1, _3e3d_1, _2b_1, _2d_1, _25_1, _2e2e_1, arg_23_1, len_23_1, error1, getmetatable1, next1, print1, getIdx1, setIdx_21_1, setmetatable1, tonumber1, tostring1, type_23_1, n1, slice1, find1, format1, lower1, match1, rep1, sub1, upper1, concat1, unpack1, list1, cons1, pretty1, arg1, apply1, first1, empty_3f_1, string_3f_1, number_3f_1, type1, max1, min1, car1, cdr1, map1, partition1, nth1, nths1, pushCdr_21_1, append1, range1, reverse1, cadr1, split1, createLookup1, exit1, getenv1, invokable_3f_1, compose1, lens1, getter_3f_1, setter_3f_1, composeInner1, _3c3e_1, _5e2e_1, _5e7e_1, on1, on_21_1, succ1, exit_21_1, self1, config1, coloredAnsi1, colored_3f_1, colored1, create1, setAction1, addAction1, addArgument_21_1, addHelp_21_1, usageNarg_21_1, usage_21_1, helpArgs_21_1, help_21_1, matcher1, parse_21_1, setCursorPos1, blit1, getSize1, genLv1, drawBuff1, genBuffer1, screenBuffer1, pullEvent1, queueEvent1, genContainer1, initBuffer1, genHandle1, openHand1, closeHand1, cleanHand1, readHand1, writeHand1, imanagerVars1, init1, update1, genStream1, peek1, match2, eat1, eatWhile1, skipTo1, skipToEnd1, eol1, next2, backUp1, current1, keywords1, api1, escapable1, initState1, nextToken1, langApi1, genParser1, prevState1, parseLines1, parseLine1, vimVars1
+local _3d_1, _2f3d_1, _3c_1, _3c3d_1, _3e_1, _3e3d_1, _2b_1, _2d_1, _25_1, _2e2e_1, arg_23_1, len_23_1, error1, getmetatable1, next1, print1, getIdx1, setIdx_21_1, setmetatable1, tonumber1, tostring1, type_23_1, n1, slice1, find1, format1, lower1, match1, rep1, sub1, upper1, concat1, unpack1, list1, arg1, constVal1, apply1, first1, empty_3f_1, string_3f_1, number_3f_1, exists_3f_1, type1, neq_3f_1, map1, keys1, put_21_1, eq_3f_1, pretty1, max1, min1, car1, cdr1, map2, partition1, nth1, nths1, pushCdr_21_1, append1, range1, reverse1, cadr1, split1, createLookup1, exit1, getenv1, invokable_3f_1, compose1, lens1, getter_3f_1, setter_3f_1, composeInner1, _3c3e_1, _5e2e_1, _5e7e_1, on1, on_21_1, succ1, exit_21_1, self1, config1, coloredAnsi1, colored_3f_1, colored1, create1, setAction1, addAction1, addArgument_21_1, addHelp_21_1, usageNarg_21_1, usage_21_1, helpArgs_21_1, help_21_1, matcher1, parse_21_1, setCursorPos1, blit1, getSize1, genLv1, drawBuff1, genBuffer1, screenBuffer1, pullEvent1, queueEvent1, genContainer1, initBuffer1, genHandle1, openHand1, closeHand1, cleanHand1, readHand1, writeHand1, imanagerVars1, init1, update1, genStream1, peek1, match2, eat1, eatWhile1, skipTo1, skipToEnd1, eol1, next2, backUp1, current1, keywords1, api1, escapable1, initState1, nextToken1, langApi1, genParser1, prevState1, parseLines1, parseLine1, vimVars1
 _3d_1 = function(v1, v2) return v1 == v2 end
 _2f3d_1 = function(v1, v2) return v1 ~= v2 end
 _3c_1 = function(v1, v2) return v1 < v2 end
@@ -64,55 +64,6 @@ list1 = (function(...)
 	local xs = _pack(...) xs.tag = "list"
 	return xs
 end)
-cons1 = (function(x, xs)
-	local _offset, _result, _temp = 0, {tag="list",n=0}
-	_result[1 + _offset] = x
-	_temp = xs
-	for _c = 1, _temp.n do _result[1 + _c + _offset] = _temp[_c] end
-	_offset = _offset + _temp.n
-	_result.n = _offset + 1
-	return _result
-end)
-pretty1 = (function(value)
-	local ty = type_23_1(value)
-	if ty == "table" then
-		local tag = value["tag"]
-		if tag == "list" then
-			local out = ({tag = "list", n = 0})
-			local temp = n1(value)
-			local temp1 = 1
-			while temp1 <= temp do
-				out[temp1] = pretty1(value[temp1])
-				temp1 = temp1 + 1
-			end
-			return "(" .. concat1(out, " ") .. ")"
-		elseif type_23_1(getmetatable1(value)) == "table" and type_23_1(getmetatable1(value)["--pretty-print"]) == "function" then
-			return getmetatable1(value)["--pretty-print"](value)
-		elseif tag == "list" then
-			return value["contents"]
-		elseif tag == "symbol" then
-			return value["contents"]
-		elseif tag == "key" then
-			return ":" .. value["value"]
-		elseif tag == "string" then
-			return format1("%q", value["value"])
-		elseif tag == "number" then
-			return tostring1(value["value"])
-		else
-			local out = ({tag = "list", n = 0})
-			local temp, v = next1(value)
-			while temp ~= nil do
-				out = cons1(pretty1(temp) .. " " .. pretty1(v), out)
-				temp, v = next1(value, temp)
-			end
-			return "{" .. (concat1(out, " ") .. "}")
-		end
-	elseif ty == "string" then
-		return format1("%q", value)
-	else
-		return tostring1(value)
-	end
-end)
 if nil == arg_23_1 then
 	arg1 = ({tag = "list", n = 0})
 else
@@ -122,6 +73,20 @@ else
 	end
 	arg1 = arg_23_1
 end
+constVal1 = (function(val)
+	if type_23_1(val) == "table" then
+		local tag = val["tag"]
+		if tag == "number" then
+			return val["value"]
+		elseif tag == "string" then
+			return val["value"]
+		else
+			return val
+		end
+	else
+		return val
+	end
+end)
 apply1 = (function(f, ...)
 	local _n = _select("#", ...) - 1
 	local xss, xs
@@ -165,6 +130,9 @@ end)
 number_3f_1 = (function(x)
 	return type_23_1(x) == "number" or type_23_1(x) == "table" and x["tag"] == "number"
 end)
+exists_3f_1 = (function(x)
+	return not (type_23_1(x) == "nil")
+end)
 type1 = (function(val)
 	local ty = type_23_1(val)
 	if ty == "table" then
@@ -173,6 +141,220 @@ type1 = (function(val)
 		return ty
 	end
 end)
+neq_3f_1 = (function(x, y)
+	return not eq_3f_1(x, y)
+end)
+map1 = (function(f, x)
+	local out = ({tag = "list", n = 0})
+	local temp = n1(x)
+	local temp1 = 1
+	while temp1 <= temp do
+		out[temp1] = f(x[temp1])
+		temp1 = temp1 + 1
+	end
+	out["n"] = n1(x)
+	return out
+end)
+keys1 = (function(x)
+	local out, n = ({tag = "list", n = 0}), 0
+	local temp, _ = next1(x)
+	while temp ~= nil do
+		n = 1 + n
+		out[n] = temp
+		temp, _ = next1(x, temp)
+	end
+	out["n"] = n
+	return unpack1(out, 1, n(out))
+end)
+put_21_1 = (function(t, typs, l)
+	while not (type1(typs) == "list" and n1(typs) == 1) do
+		local x, y = typs[1], slice1(typs, 2)
+		if t[x] then
+			t, typs = t[x], y
+		else
+			t[x] = ({})
+			t, typs = t[x], y
+		end
+	end
+	t[typs[1]] = l
+	return nil
+end)
+eq_3f_1 = setmetatable1(({["lookup"]=({})}), ({["__call"]=(function(temp_this, x, y)
+	local temp_method
+	local temp = temp_this["lookup"]
+	if temp then
+		local temp1 = temp[type1(x)]
+		if temp1 then
+			temp_method = temp1[type1(y)] or nil
+		else
+			temp_method = nil
+		end
+	else
+		temp_method = nil
+	end
+	if not temp_method then
+		if temp_this["default"] then
+			temp_method = temp_this["default"]
+		else
+			error1("No matching method to call for " .. (type1(x) .. " ") .. (type1(y) .. " ") .. "\nthere are methods to call for " .. keys1(temp_this["lookup"]))
+		end
+	end
+	return temp_method(x, y)
+end)}))
+put_21_1(eq_3f_1, list1("lookup", "list", "list"), (function(myself)
+	myself = (function(x, y)
+		if n1(x) ~= n1(y) then
+			return false
+		else
+			local equal = true
+			local temp = n1(x)
+			local temp1 = 1
+			while temp1 <= temp do
+				if neq_3f_1(x[temp1], y[temp1]) then
+					equal = false
+				end
+				temp1 = temp1 + 1
+			end
+			return equal
+		end
+	end)
+	return myself
+end)(nil))
+put_21_1(eq_3f_1, list1("lookup", "table", "table"), (function(myself)
+	myself = (function(x, y)
+		local equal = true
+		local temp, v = next1(x)
+		while temp ~= nil do
+			if neq_3f_1(v, y[temp]) then
+				equal = false
+			end
+			temp, v = next1(x, temp)
+		end
+		return equal
+	end)
+	return myself
+end)(nil))
+put_21_1(eq_3f_1, list1("lookup", "symbol", "symbol"), (function(myself)
+	myself = (function(x, y)
+		return x["contents"] == y["contents"]
+	end)
+	return myself
+end)(nil))
+put_21_1(eq_3f_1, list1("lookup", "string", "symbol"), (function(myself)
+	myself = (function(x, y)
+		return x == y["contents"]
+	end)
+	return myself
+end)(nil))
+put_21_1(eq_3f_1, list1("lookup", "symbol", "string"), (function(myself)
+	myself = (function(x, y)
+		return x["contents"] == y
+	end)
+	return myself
+end)(nil))
+put_21_1(eq_3f_1, list1("lookup", "key", "string"), (function(myself)
+	myself = (function(x, y)
+		return x["value"] == y
+	end)
+	return myself
+end)(nil))
+put_21_1(eq_3f_1, list1("lookup", "string", "key"), (function(myself)
+	myself = (function(x, y)
+		return x == y["value"]
+	end)
+	return myself
+end)(nil))
+put_21_1(eq_3f_1, list1("lookup", "key", "key"), (function(myself)
+	myself = (function(x, y)
+		return x["value"] == y["value"]
+	end)
+	return myself
+end)(nil))
+eq_3f_1["default"] = (function(myself)
+	myself = (function(x, y)
+		return false
+	end)
+	return myself
+end)(nil)
+local original = getmetatable1(eq_3f_1)["__call"]
+getmetatable1(eq_3f_1)["__call"] = (function(self, x, y)
+	if x == y then
+		return true
+	else
+		return original(self, x, y)
+	end
+end)
+pretty1 = setmetatable1(({["lookup"]=({})}), ({["__call"]=(function(temp_this, x)
+	local temp_method
+	local temp = temp_this["lookup"]
+	if temp then
+		temp_method = temp[type1(x)] or nil
+	else
+		temp_method = nil
+	end
+	if not temp_method then
+		if temp_this["default"] then
+			temp_method = temp_this["default"]
+		else
+			error1("No matching method to call for " .. (type1(x) .. " ") .. "\nthere are methods to call for " .. keys1(temp_this["lookup"]))
+		end
+	end
+	return temp_method(x)
+end)}))
+put_21_1(pretty1, list1("lookup", "list"), (function(myself)
+	myself = (function(xs)
+		return "(" .. concat1(map1(pretty1, xs), " ") .. ")"
+	end)
+	return myself
+end)(nil))
+put_21_1(pretty1, list1("lookup", "symbol"), (function(myself)
+	myself = (function(x)
+		return x["contents"]
+	end)
+	return myself
+end)(nil))
+put_21_1(pretty1, list1("lookup", "key"), (function(myself)
+	myself = (function(x)
+		return ":" .. x["value"]
+	end)
+	return myself
+end)(nil))
+put_21_1(pretty1, list1("lookup", "number"), (function(myself)
+	myself = (function(x)
+		return tostring1(constVal1(x))
+	end)
+	return myself
+end)(nil))
+put_21_1(pretty1, list1("lookup", "string"), (function(myself)
+	myself = (function(x)
+		return format1("%q", constVal1(x))
+	end)
+	return myself
+end)(nil))
+put_21_1(pretty1, list1("lookup", "table"), (function(myself)
+	myself = (function(x)
+		local out = ({tag = "list", n = 0})
+		local temp, v = next1(x)
+		while temp ~= nil do
+			local _offset, _result, _temp = 0, {tag="list",n=0}
+			_result[1 + _offset] = pretty1(temp) .. " " .. pretty1(v)
+			_temp = out
+			for _c = 1, _temp.n do _result[1 + _c + _offset] = _temp[_c] end
+			_offset = _offset + _temp.n
+			_result.n = _offset + 1
+			out = _result
+			temp, v = next1(x, temp)
+		end
+		return "{" .. (concat1(out, " ") .. "}")
+	end)
+	return myself
+end)(nil))
+pretty1["default"] = (function(myself)
+	myself = (function(x)
+		return tostring1(x)
+	end)
+	return myself
+end)(nil)
 max1 = math.max
 min1 = math.min
 car1 = (function(x)
@@ -193,7 +375,7 @@ cdr1 = (function(x)
 		return slice1(x, 2)
 	end
 end)
-map1 = (function(fn, ...)
+map2 = (function(fn, ...)
 	local xss = _pack(...) xss.tag = "list"
 	local ns
 	local out = ({tag = "list", n = 0})
@@ -1083,7 +1265,6 @@ update1 = (function()
 	return nil
 end)
 genStream1 = (function(string)
-	print1("GEN WIT ", string)
 	return ({["string"]=string,["start"]=1,["pos"]=1,["peek"]=peek1,["match"]=match2,["eat"]=eat1,["eat-while"]=eatWhile1,["skip-to"]=skipTo1,["skip-to-end"]=skipToEnd1,["eol"]=eol1,["next"]=next2,["back-up"]=backUp1,["current"]=current1})
 end)
 peek1 = (function(stream)
@@ -1104,7 +1285,7 @@ match2 = (function(stream, pattern)
 	end
 end)
 eat1 = (function(stream, pattern)
-	local char = sub1(stream["pos"], stream["pos"])
+	local char = sub1(stream["string"], stream["pos"], stream["pos"])
 	if find1(char, pattern) then
 		_5e7e_1(stream, on_21_1("pos"), succ1)
 		return char
@@ -1153,17 +1334,16 @@ backUp1 = (function(stream, n)
 	end
 end)
 current1 = (function(stream)
-	return sub1(stream["start"], stream["pos"] - 1)
+	return sub1(stream["string"], stream["start"], stream["pos"] - 1)
 end)
 genStream1("Hey")
-keywords1 = createLookup1(({tag = "list", n = 21, ({tag="key", value="and"}), ({tag="key", value="break"}), ({tag="key", value="do"}), ({tag="key", value="else"}), ({tag="key", value="elseif"}), ({tag="key", value="end"}), ({tag="key", value="false"}), ({tag="key", value="for"}), ({tag="key", value="function"}), ({tag="key", value="if"}), ({tag="key", value="in"}), ({tag="key", value="local"}), ({tag="key", value="nil"}), ({tag="key", value="not"}), ({tag="key", value="or"}), ({tag="key", value="repeat"}), ({tag="key", value="return"}), ({tag="key", value="then"}), ({tag="key", value="true"}), ({tag="key", value="until"}), ({tag="key", value="while"})}))
+keywords1 = createLookup1(({tag = "list", n = 21, "and", "break", "do", "else", "elseif", "end", "false", "for", "function", "if", "in", "local", "nil", "not", "or", "repeat", "return", "then", "true", "until", "while"}))
 api1 = createLookup1(({tag = "list", n = 1, ({tag="key", value="drawPixel"})}))
 escapable1 = createLookup1(({tag = "list", n = 10, ({tag="key", value="a"}), ({tag="key", value="b"}), ({tag="key", value="f"}), ({tag="key", value="n"}), ({tag="key", value="r"}), ({tag="key", value="t"}), ({tag="key", value="v"}), "\\", "\"", "'"}))
 initState1 = (function()
 	return ({["c-token"]="root",["starter"]=""})
 end)
 nextToken1 = (function(stream, state)
-	print1("c", self1(stream, "current"))
 	local temp = state["c-token"]
 	if temp == "root" then
 		local char = self1(stream, "next")
@@ -1203,7 +1383,7 @@ nextToken1 = (function(stream, state)
 		elseif find1(char, "[%w_]") then
 			self1(stream, "eat-while", "[%w_]")
 			local word = self1(stream, "current")
-			if keywords1[word] then
+			if exists_3f_1(keywords1[word]) then
 				return "keyword"
 			elseif api1[word] then
 				return "api"
@@ -1258,10 +1438,9 @@ genParser1 = (function(lang)
 	return ({["lang"]=lang,["lang-api"]=langApi1[lang],["cache"]=({}),["state"]=nil,["prev-state"]=prevState1,["parse-lines"]=parseLines1,["parse-line"]=parseLine1})
 end)
 prevState1 = (function(parser, lineIndex)
-	print1(type1(lineIndex))
 	local idx = apply1(max1, append1(first1(partition1((function(temp)
 		return temp < lineIndex
-	end), (map1(print1, range1("from", 1, "to", 3))))), ({tag = "list", n = 1, 0})))
+	end), (map2(tonumber1, range1("from", 1, "to", 3))))), ({tag = "list", n = 1, 0})))
 	if tonumber1(idx) > 0 then
 		return parser["cache"][idx]
 	else
@@ -1270,7 +1449,7 @@ prevState1 = (function(parser, lineIndex)
 end)
 parseLines1 = (function(parser, lines, lineIndex)
 	local result = ({tag = "list", n = 2, ({tag = "list", n = 0}), ({ tag="symbol", contents="false"})})
-	parser["cache"] = map1((function(temp)
+	parser["cache"] = map2((function(temp)
 		return parser["cache"][temp]
 	end), first1(partition1((function(temp)
 		return temp <= lineIndex
@@ -1323,14 +1502,7 @@ parseLine1 = (function(parser, line, lineIndex)
 		return result
 	end
 end)
-local temp = ({tag = "list", n = 2, "a", "b"})
-local temp1 = n1(temp)
-local temp2 = 1
-while temp2 <= temp1 do
-	print1(temp2, (temp[temp2]))
-	temp2 = temp2 + 1
-end
-print1(pretty1(self1(genParser1("lua"), "parse-lines", ({tag = "list", n = 1, "return"}), 1)))
+print1(pretty1(self1(genParser1("lua"), "parse-lines", ({tag = "list", n = 1, "local function hey() print('hello world') return true end"}), 1)))
 vimVars1 = ({["state"]="normal",["running"]=true})
 local spec = create1()
 addHelp_21_1(spec)

@@ -21,10 +21,9 @@
     :prev-state prev-state :parse-lines parse-lines :parse-line parse-line })
 
 (defun prev-state (parser line-index)
-  (print! (type line-index))
   (with (idx (apply math/max (append (filter 
                                        (cut < <> line-index)
-                                       (map print! (lkeys (.> parser :cache)))) '(0))))
+                                       (map string->number (lkeys (.> parser :cache)))) '(0))))
     (when (> (string->number idx) 0)
       (.> parser :cache idx))))
 
