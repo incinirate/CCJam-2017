@@ -22,9 +22,9 @@
 (defun read-hand (handle amount)
   "Reads AMOUNT lines from HANDLE"
   (with (lines (string/split 
-                  (.> handle :text :data) "[^\n]+"
-                  (+ amount (^. handle (<> (on :ptr) (on :data))))))
-    (drop lines (^. handle (<> (on :ptr) (on :data))))
+                  (.> handle :data :text) "[^\n]+"
+                  (+ amount (^. handle :data :ptr))))
+    (drop lines (.> handle :data :ptr))
     (^~ handle (<> (on! :ptr) (on :data)) (cut + <> amount))
     lines))
 
