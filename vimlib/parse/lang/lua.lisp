@@ -46,7 +46,7 @@
             (self stream :eat-while "[%w_]")
             (with (word (self stream :current))
               (cond
-                [(exists? (.> keywords word)) "keyword"]
+                [(.> keywords word) "keyword"]
                 [(.> api word) "api"]
                 [true "other"]))]
           [true "other"]))]
