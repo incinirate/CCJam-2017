@@ -1,6 +1,6 @@
 (import extlib/cc/term term)
 (import extlib/cc/io (read))
-(import vimlib/util (assert-types! gen-lv cut-across slot-across))
+(import vimlib/util (assert-types! gen-lv cut-across slot-across default))
 
 (defmacro inset-one (buff x y va vl) :hidden
   "Replace one part VA (number index) of a blit triad `(text backgroundColor foregroundColor)` at the position X, Y of BUFF with VL"
@@ -28,11 +28,17 @@
                           nth crep <>))
         (^= (.> buff :old-rep) (on! i) false)))))
 
+(defun clear-buff (buff color)
+  (.<! buff :old-rep (gen-lv true (.> buff :height)))
+  (.<! buff :cur-rep (gen-lv 
+                       (gen-lv (string/rep (default color "7") (.> buff :width)) 3)
+                       (.> buff :height))))
+
 (defun gen-buffer (w h)
   "Generate a new buffer with the width H and height H"
   (assert-types! w h number)
   { :old-rep (gen-lv true h)
-    :cur-rep (gen-lv (gen-lv (string/rep "0" w) 3) h)
+    :cur-rep (gen-lv (gen-lv (string/rep "7" w) 3) h)
     :width w
     :height h })
 

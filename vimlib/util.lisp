@@ -114,3 +114,6 @@
 
 (defmacro lkeys (lst)
   `(range :from 1 :to ,(n lst)))
+
+(defmacro indself (&body)
+  `(,@(take body 1) (,@(init (nth body 1))) ,@(cdr body)))

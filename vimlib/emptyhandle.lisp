@@ -7,11 +7,13 @@
     :write write-hand
     :close close-hand
     :cleanup clean-hand 
-    :data { :text "" :openmode enums/*mode-closed* :ptr 0 } })
+    :data { :text "Hello world" :openmode enums/*mode-closed* :ptr 0 } })
 
 (defun open-hand (handle mode)
   "Opens HANDLE for MODE (*mode-read* or *mode-write*)"
-  (.<! handle :data :ptr 0))
+  (.<! handle :data :ptr 0)
+  (when (= mode enums/*mode-write*)
+    (.<! handle :data :text "")))
 (defun close-hand (handle)
   "Exits the currently active mode for HANDLE"
   nil)
@@ -23,7 +25,7 @@
   "Reads AMOUNT lines from HANDLE"
   (with (lines (string/split 
                   (.> handle :data :text) "[^\n]+"
-                  (+ amount (^. handle :data :ptr))))
+                  (+ amount (.> handle :data :ptr))))
     (drop lines (.> handle :data :ptr))
     (^~ handle (<> (on! :ptr) (on :data)) (cut + <> amount))
     lines))
@@ -33,4 +35,4 @@
   (assert! (= (.> handle :data :openmode) enums/*mode-write*)
     "Handle not opened in write mode")
 
-  (.<! handle :data :text data))
+  (.<! handle :data :text (.. (.> handle :data :text) data)))

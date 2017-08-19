@@ -19,7 +19,7 @@
 (defun update ()
   (os/pullEvent)
   (with (cont (.> imanager-vars :container))
-    (draw-container (cont 1 1 (.> screen-buffer :width) (.> screen-buffer :height)))))
+    (draw-container cont `(1 1 ,(.> screen-buffer :width) ,(.> screen-buffer :height)))))
 
 (defun draw-container (cont cpos)
   (let* [(pos (append '() cpos)) ;; TODO assess neccessity of cloning here
@@ -32,9 +32,9 @@
         (if (.> child :orient)
           (draw-container child childpos)
           (draw-buffer child childpos)))
-      (case (.> cont :orient) ;; TODO hoist orientation case out of loop
-        [enums/*cont-horiz* (^~ pos (on! 1) (cut + <> dw))]
-        [enums/*cont-vert*  (^~ pos (on! 2) (cut + <> dh))]))))
+      (cond ;; TODO hoist orientation case out of loop
+        [(= (.> cont :orient) enums/*cont-horiz*) (^~ pos (on! 1) (cut + <> dw))]
+        [(= (.> cont :orient) enums/*cont-vert*)  (^~ pos (on! 2) (cut + <> dh))]))))
 
 (defun draw-buffer (buffer pos)
   )

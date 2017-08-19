@@ -3,7 +3,7 @@ if not table.unpack then table.unpack = unpack end
 local load = load if _VERSION:find("5.1") then load = function(x, n, _, env) local f, e = loadstring(x, n) if not f then return f, e end if env then setfenv(f, env) end return f end end
 local _select, _unpack, _pack, _error = select, table.unpack, table.pack, error
 local _libs = {}
-local _3d_1, _2f3d_1, _3c_1, _3c3d_1, _3e_1, _3e3d_1, _2b_1, _2d_1, _2f_1, _25_1, _2e2e_1, arg_23_1, len_23_1, error1, getmetatable1, next1, print1, getIdx1, setIdx_21_1, setmetatable1, tonumber1, tostring1, type_23_1, n1, slice1, find1, format1, lower1, match1, rep1, sub1, upper1, concat1, unpack1, list1, cons1, pretty1, arg1, apply1, first1, empty_3f_1, string_3f_1, number_3f_1, type1, eq_3f_1, max1, min1, car1, cdr1, map1, partition1, nth1, nths1, pushCdr_21_1, append1, range1, reverse1, cadr1, split1, createLookup1, exit1, getenv1, invokable_3f_1, compose1, lens1, getter_3f_1, setter_3f_1, composeInner1, _3c3e_1, _5e2e_1, _5e7e_1, on1, on_21_1, succ1, exit_21_1, self1, config1, coloredAnsi1, colored_3f_1, colored1, create1, setAction1, addAction1, addArgument_21_1, addHelp_21_1, usageNarg_21_1, usage_21_1, helpArgs_21_1, help_21_1, matcher1, parse_21_1, setCursorPos1, blit1, getSize1, genLv1, drawBuff1, genBuffer1, screenBuffer1, pullEvent1, queueEvent1, genContainer1, initBuffer1, genHandle1, openHand1, closeHand1, cleanHand1, readHand1, writeHand1, imanagerVars1, init1, update1, drawContainer1, genStream1, peek1, match2, eat1, eatWhile1, skipTo1, skipToEnd1, eol1, next2, backUp1, current1, keywords1, api1, escapable1, initState1, nextToken1, langApi1, genParser1, prevState1, parseLines1, parseLine1, vimVars1
+local _3d_1, _2f3d_1, _3c_1, _3c3d_1, _3e_1, _3e3d_1, _2b_1, _2d_1, _2f_1, _25_1, _2e2e_1, arg_23_1, len_23_1, error1, getmetatable1, next1, print1, getIdx1, setIdx_21_1, setmetatable1, tonumber1, tostring1, type_23_1, n1, slice1, find1, format1, lower1, match1, rep1, sub1, upper1, concat1, unpack1, list1, arg1, constVal1, apply1, first1, empty_3f_1, string_3f_1, number_3f_1, type1, neq_3f_1, map1, keys1, put_21_1, eq_3f_1, pretty1, max1, min1, car1, cdr1, map2, partition1, nth1, nths1, pushCdr_21_1, append1, range1, reverse1, cadr1, split1, createLookup1, exit1, getenv1, invokable_3f_1, compose1, lens1, getter_3f_1, setter_3f_1, composeInner1, _3c3e_1, _5e2e_1, _5e7e_1, on1, on_21_1, succ1, exit_21_1, self1, config1, coloredAnsi1, colored_3f_1, colored1, create1, setAction1, addAction1, addArgument_21_1, addHelp_21_1, usageNarg_21_1, usage_21_1, helpArgs_21_1, help_21_1, matcher1, parse_21_1, setCursorPos1, blit1, getSize1, genLv1, drawBuff1, genBuffer1, screenBuffer1, pullEvent1, queueEvent1, genContainer1, genStream1, peek1, match2, eat1, eatWhile1, skipTo1, skipToEnd1, eol1, next2, backUp1, current1, keywords1, api1, escapable1, initState1, nextToken1, langApi1, genParser1, prevState1, parseLines1, parseLine1, initBuffer1, fillData1, genHandle1, openHand1, closeHand1, cleanHand1, readHand1, writeHand1, imanagerVars1, init1, update1, drawContainer1, vimVars1
 _3d_1 = function(v1, v2) return v1 == v2 end
 _2f3d_1 = function(v1, v2) return v1 ~= v2 end
 _3c_1 = function(v1, v2) return v1 < v2 end
@@ -65,55 +65,6 @@ list1 = (function(...)
 	local xs = _pack(...) xs.tag = "list"
 	return xs
 end)
-cons1 = (function(x, xs)
-	local _offset, _result, _temp = 0, {tag="list",n=0}
-	_result[1 + _offset] = x
-	_temp = xs
-	for _c = 1, _temp.n do _result[1 + _c + _offset] = _temp[_c] end
-	_offset = _offset + _temp.n
-	_result.n = _offset + 1
-	return _result
-end)
-pretty1 = (function(value)
-	local ty = type_23_1(value)
-	if ty == "table" then
-		local tag = value["tag"]
-		if tag == "list" then
-			local out = ({tag = "list", n = 0})
-			local temp = n1(value)
-			local temp1 = 1
-			while temp1 <= temp do
-				out[temp1] = pretty1(value[temp1])
-				temp1 = temp1 + 1
-			end
-			return "(" .. concat1(out, " ") .. ")"
-		elseif type_23_1(getmetatable1(value)) == "table" and type_23_1(getmetatable1(value)["--pretty-print"]) == "function" then
-			return getmetatable1(value)["--pretty-print"](value)
-		elseif tag == "list" then
-			return value["contents"]
-		elseif tag == "symbol" then
-			return value["contents"]
-		elseif tag == "key" then
-			return ":" .. value["value"]
-		elseif tag == "string" then
-			return format1("%q", value["value"])
-		elseif tag == "number" then
-			return tostring1(value["value"])
-		else
-			local out = ({tag = "list", n = 0})
-			local temp, v = next1(value)
-			while temp ~= nil do
-				out = cons1(pretty1(temp) .. " " .. pretty1(v), out)
-				temp, v = next1(value, temp)
-			end
-			return "{" .. (concat1(out, " ") .. "}")
-		end
-	elseif ty == "string" then
-		return format1("%q", value)
-	else
-		return tostring1(value)
-	end
-end)
 if nil == arg_23_1 then
 	arg1 = ({tag = "list", n = 0})
 else
@@ -123,6 +74,20 @@ else
 	end
 	arg1 = arg_23_1
 end
+constVal1 = (function(val)
+	if type_23_1(val) == "table" then
+		local tag = val["tag"]
+		if tag == "number" then
+			return val["value"]
+		elseif tag == "string" then
+			return val["value"]
+		else
+			return val
+		end
+	else
+		return val
+	end
+end)
 apply1 = (function(f, ...)
 	local _n = _select("#", ...) - 1
 	local xss, xs
@@ -174,51 +139,220 @@ type1 = (function(val)
 		return ty
 	end
 end)
-eq_3f_1 = (function(x, y)
-	if x == y then
-		return true
+neq_3f_1 = (function(x, y)
+	return not eq_3f_1(x, y)
+end)
+map1 = (function(f, x)
+	local out = ({tag = "list", n = 0})
+	local temp = n1(x)
+	local temp1 = 1
+	while temp1 <= temp do
+		out[temp1] = f(x[temp1])
+		temp1 = temp1 + 1
+	end
+	out["n"] = n1(x)
+	return out
+end)
+keys1 = (function(x)
+	local out, n = ({tag = "list", n = 0}), 0
+	local temp, _ = next1(x)
+	while temp ~= nil do
+		n = 1 + n
+		out[n] = temp
+		temp, _ = next1(x, temp)
+	end
+	out["n"] = n
+	return unpack1(out, 1, n(out))
+end)
+put_21_1 = (function(t, typs, l)
+	while not (type1(typs) == "list" and n1(typs) == 1) do
+		local x, y = typs[1], slice1(typs, 2)
+		if t[x] then
+			t, typs = t[x], y
+		else
+			t[x] = ({})
+			t, typs = t[x], y
+		end
+	end
+	t[typs[1]] = l
+	return nil
+end)
+eq_3f_1 = setmetatable1(({["lookup"]=({})}), ({["__call"]=(function(temp_this, x, y)
+	local temp_method
+	local temp = temp_this["lookup"]
+	if temp then
+		local temp1 = temp[type1(x)]
+		if temp1 then
+			temp_method = temp1[type1(y)] or nil
+		else
+			temp_method = nil
+		end
 	else
-		local typeX, typeY = type1(x), type1(y)
-		if typeX == "list" and (typeY == "list" and n1(x) == n1(y)) then
+		temp_method = nil
+	end
+	if not temp_method then
+		if temp_this["default"] then
+			temp_method = temp_this["default"]
+		else
+			error1("No matching method to call for " .. (type1(x) .. " ") .. (type1(y) .. " ") .. "\nthere are methods to call for " .. keys1(temp_this["lookup"]))
+		end
+	end
+	return temp_method(x, y)
+end)}))
+put_21_1(eq_3f_1, list1("lookup", "list", "list"), (function(myself)
+	myself = (function(x, y)
+		if n1(x) ~= n1(y) then
+			return false
+		else
 			local equal = true
 			local temp = n1(x)
 			local temp1 = 1
 			while temp1 <= temp do
-				if not eq_3f_1(x[temp1], (y[temp1])) then
+				if neq_3f_1(x[temp1], y[temp1]) then
 					equal = false
 				end
 				temp1 = temp1 + 1
 			end
 			return equal
-		elseif "table" == type_23_1(x) and getmetatable1(x) then
-			return getmetatable1(x)["--compare"](x, y)
-		elseif "table" == typeX and "table" == typeY then
-			local equal = true
-			local temp, v = next1(x)
-			while temp ~= nil do
-				if not eq_3f_1(v, (y[temp])) then
-					equal = false
-				end
-				temp, v = next1(x, temp)
-			end
-			return equal
-		elseif "symbol" == typeX and "symbol" == typeY then
-			return x["contents"] == y["contents"]
-		elseif "key" == typeX and "key" == typeY then
-			return x["value"] == y["value"]
-		elseif "symbol" == typeX and "string" == typeY then
-			return x["contents"] == y
-		elseif "string" == typeX and "symbol" == typeY then
-			return x == y["contents"]
-		elseif "key" == typeX and "string" == typeY then
-			return x["value"] == y
-		elseif "string" == typeX and "key" == typeY then
-			return x == y["value"]
-		else
-			return false
 		end
+	end)
+	return myself
+end)(nil))
+put_21_1(eq_3f_1, list1("lookup", "table", "table"), (function(myself)
+	myself = (function(x, y)
+		local equal = true
+		local temp, v = next1(x)
+		while temp ~= nil do
+			if neq_3f_1(v, y[temp]) then
+				equal = false
+			end
+			temp, v = next1(x, temp)
+		end
+		return equal
+	end)
+	return myself
+end)(nil))
+put_21_1(eq_3f_1, list1("lookup", "symbol", "symbol"), (function(myself)
+	myself = (function(x, y)
+		return x["contents"] == y["contents"]
+	end)
+	return myself
+end)(nil))
+put_21_1(eq_3f_1, list1("lookup", "string", "symbol"), (function(myself)
+	myself = (function(x, y)
+		return x == y["contents"]
+	end)
+	return myself
+end)(nil))
+put_21_1(eq_3f_1, list1("lookup", "symbol", "string"), (function(myself)
+	myself = (function(x, y)
+		return x["contents"] == y
+	end)
+	return myself
+end)(nil))
+put_21_1(eq_3f_1, list1("lookup", "key", "string"), (function(myself)
+	myself = (function(x, y)
+		return x["value"] == y
+	end)
+	return myself
+end)(nil))
+put_21_1(eq_3f_1, list1("lookup", "string", "key"), (function(myself)
+	myself = (function(x, y)
+		return x == y["value"]
+	end)
+	return myself
+end)(nil))
+put_21_1(eq_3f_1, list1("lookup", "key", "key"), (function(myself)
+	myself = (function(x, y)
+		return x["value"] == y["value"]
+	end)
+	return myself
+end)(nil))
+eq_3f_1["default"] = (function(myself)
+	myself = (function(x, y)
+		return false
+	end)
+	return myself
+end)(nil)
+local original = getmetatable1(eq_3f_1)["__call"]
+getmetatable1(eq_3f_1)["__call"] = (function(self, x, y)
+	if x == y then
+		return true
+	else
+		return original(self, x, y)
 	end
 end)
+pretty1 = setmetatable1(({["lookup"]=({})}), ({["__call"]=(function(temp_this, x)
+	local temp_method
+	local temp = temp_this["lookup"]
+	if temp then
+		temp_method = temp[type1(x)] or nil
+	else
+		temp_method = nil
+	end
+	if not temp_method then
+		if temp_this["default"] then
+			temp_method = temp_this["default"]
+		else
+			error1("No matching method to call for " .. (type1(x) .. " ") .. "\nthere are methods to call for " .. keys1(temp_this["lookup"]))
+		end
+	end
+	return temp_method(x)
+end)}))
+put_21_1(pretty1, list1("lookup", "list"), (function(myself)
+	myself = (function(xs)
+		return "(" .. concat1(map1(pretty1, xs), " ") .. ")"
+	end)
+	return myself
+end)(nil))
+put_21_1(pretty1, list1("lookup", "symbol"), (function(myself)
+	myself = (function(x)
+		return x["contents"]
+	end)
+	return myself
+end)(nil))
+put_21_1(pretty1, list1("lookup", "key"), (function(myself)
+	myself = (function(x)
+		return ":" .. x["value"]
+	end)
+	return myself
+end)(nil))
+put_21_1(pretty1, list1("lookup", "number"), (function(myself)
+	myself = (function(x)
+		return tostring1(constVal1(x))
+	end)
+	return myself
+end)(nil))
+put_21_1(pretty1, list1("lookup", "string"), (function(myself)
+	myself = (function(x)
+		return format1("%q", constVal1(x))
+	end)
+	return myself
+end)(nil))
+put_21_1(pretty1, list1("lookup", "table"), (function(myself)
+	myself = (function(x)
+		local out = ({tag = "list", n = 0})
+		local temp, v = next1(x)
+		while temp ~= nil do
+			local _offset, _result, _temp = 0, {tag="list",n=0}
+			_result[1 + _offset] = pretty1(temp) .. " " .. pretty1(v)
+			_temp = out
+			for _c = 1, _temp.n do _result[1 + _c + _offset] = _temp[_c] end
+			_offset = _offset + _temp.n
+			_result.n = _offset + 1
+			out = _result
+			temp, v = next1(x, temp)
+		end
+		return "{" .. (concat1(out, " ") .. "}")
+	end)
+	return myself
+end)(nil))
+pretty1["default"] = (function(myself)
+	myself = (function(x)
+		return tostring1(x)
+	end)
+	return myself
+end)(nil)
 max1 = math.max
 min1 = math.min
 car1 = (function(x)
@@ -239,7 +373,7 @@ cdr1 = (function(x)
 		return slice1(x, 2)
 	end
 end)
-map1 = (function(fn, ...)
+map2 = (function(fn, ...)
 	local xss = _pack(...) xss.tag = "list"
 	local ns
 	local out = ({tag = "list", n = 0})
@@ -1045,7 +1179,7 @@ genBuffer1 = (function(w, h)
 	if temp ~= "number" then
 		error1(format1("bad argument %s (expected %s, got %s)", "h", "number", temp), 2)
 	end
-	return ({["old-rep"]=genLv1(true, h),["cur-rep"]=genLv1(genLv1(rep1("0", w), 3), h),["width"]=w,["height"]=h})
+	return ({["old-rep"]=genLv1(true, h),["cur-rep"]=genLv1(genLv1(rep1("7", w), 3), h),["width"]=w,["height"]=h})
 end)
 screenBuffer1 = genBuffer1(getSize1())
 pullEvent1 = os.pullEvent
@@ -1058,102 +1192,6 @@ genContainer1 = (function(ori)
 			return ori
 		end
 	end)()})
-end)
-initBuffer1 = (function(fileHandle, meta)
-	local meta1
-	if type_23_1(meta) == "nil" then
-		meta1 = ({})
-	else
-		meta1 = meta
-	end
-	local lens = on_21_1("size")
-	local new
-	if type_23_1((meta1["size"])) == "nil" then
-		new = 1
-	else
-		new = meta1["size"]
-	end
-	_5e7e_1(meta1, lens, (function(x)
-		return new
-	end))
-	_5e7e_1(meta1, on_21_1("pos"), (function(x)
-		return 0
-	end))
-	_5e7e_1(meta1, on_21_1("got"), (function(x)
-		return 0
-	end))
-	return (({["handle"]=fileHandle,["cdata"]="",["meta"]=meta1}))
-end)
-genHandle1 = (function()
-	return ({["open"]=openHand1,["read"]=readHand1,["write"]=writeHand1,["close"]=closeHand1,["cleanup"]=cleanHand1,["data"]=({["text"]="",["openmode"]=0,["ptr"]=0})})
-end)
-openHand1 = (function(handle, mode)
-	handle["data"]["ptr"] = 0
-	return nil
-end)
-closeHand1 = (function(handle)
-	return nil
-end)
-cleanHand1 = (function(handle)
-	return nil
-end)
-readHand1 = (function(handle, amount)
-	local lines = split1(handle["text"]["data"], "[^\n]+", amount + _5e2e_1(handle, _3c3e_1(on1("ptr"), on1("data"))))
-	slice1(lines, _5e2e_1(handle, _3c3e_1(on1("ptr"), on1("data"))) + 1, nil)
-	_5e7e_1(handle, _3c3e_1(on_21_1("ptr"), on1("data")), (function(temp)
-		return temp + amount
-	end))
-	return lines
-end)
-writeHand1 = (function(handle, data)
-	if not (handle["data"]["openmode"] == 2) then
-		error1("Handle not opened in write mode", 0)
-	end
-	handle["data"]["text"] = data
-	return nil
-end)
-imanagerVars1 = ({})
-init1 = (function()
-	local lens, new = on_21_1("container"), genContainer1()
-	_5e7e_1(imanagerVars1, lens, (function(x)
-		return new
-	end))
-	local container, element = imanagerVars1["container"], ({["pref-w"]=0,["pref-h"]=0,["buffer"]=(initBuffer1(genHandle1()))})
-	pushCdr_21_1(container["content"], element)
-	return queueEvent1("fakeNews")
-end)
-update1 = (function()
-	pullEvent1()
-	return drawContainer1(imanagerVars1["container"](1, 1, screenBuffer1["width"], screenBuffer1["height"]))
-end)
-drawContainer1 = (function(cont, cpos)
-	local pos = append1(({tag = "list", n = 0}), cpos)
-	local dw, dh, temp = pos[3] / n1(cont["content"]), pos[4] / n1(cont["content"]), cont["content"]
-	local temp1 = n1(temp)
-	local temp2 = 1
-	while temp2 <= temp1 do
-		local child = temp[temp2]
-		local childpos = append1(({tag = "list", n = 0}), pos)
-		childpos[3] = dw
-		childpos[4] = dh
-		if child["orient"] then
-			drawContainer1(child, childpos)
-		end
-		local temp3 = cont["orient"]
-		if eq_3f_1(temp3, ({ tag="symbol", contents="enums/*cont-horiz*"})) then
-			_5e7e_1(pos, on_21_1(1), (function(temp4)
-				return temp4 + dw
-			end))
-		elseif eq_3f_1(temp3, ({ tag="symbol", contents="enums/*cont-vert*"})) then
-			_5e7e_1(pos, on_21_1(2), (function(temp4)
-				return temp4 + dh
-			end))
-		else
-			error1("Pattern matching failure!\nTried to match the following patterns against " .. pretty1(temp3) .. ", but none matched.\n" .. "  Tried: `enums/*cont-horiz*`\n  Tried: `enums/*cont-vert*`")
-		end
-		temp2 = temp2 + 1
-	end
-	return nil
 end)
 genStream1 = (function(string)
 	return ({["string"]=string,["start"]=1,["pos"]=1,["peek"]=peek1,["match"]=match2,["eat"]=eat1,["eat-while"]=eatWhile1,["skip-to"]=skipTo1,["skip-to-end"]=skipToEnd1,["eol"]=eol1,["next"]=next2,["back-up"]=backUp1,["current"]=current1})
@@ -1330,7 +1368,7 @@ end)
 prevState1 = (function(parser, lineIndex)
 	local idx = apply1(max1, append1(first1(partition1((function(temp)
 		return temp < lineIndex
-	end), (map1(tonumber1, range1("from", 1, "to", 3))))), ({tag = "list", n = 1, 0})))
+	end), (map2(tonumber1, range1("from", 1, "to", 3))))), ({tag = "list", n = 1, 0})))
 	if tonumber1(idx) > 0 then
 		return parser["cache"][idx]
 	else
@@ -1339,7 +1377,7 @@ prevState1 = (function(parser, lineIndex)
 end)
 parseLines1 = (function(parser, lines, lineIndex)
 	local result = ({tag = "list", n = 2, ({tag = "list", n = 0}), ({ tag="symbol", contents="false"})})
-	parser["cache"] = map1((function(temp)
+	parser["cache"] = map2((function(temp)
 		return parser["cache"][temp]
 	end), first1(partition1((function(temp)
 		return temp <= lineIndex
@@ -1391,6 +1429,111 @@ parseLine1 = (function(parser, line, lineIndex)
 	else
 		return result
 	end
+end)
+initBuffer1 = (function(fileHandle, meta)
+	local meta1
+	if type_23_1(meta) == "nil" then
+		meta1 = ({})
+	else
+		meta1 = meta
+	end
+	meta1["size"] = (function()
+		if type_23_1((meta1["size"])) == "nil" then
+			return 1
+		else
+			return meta1["size"]
+		end
+	end)()
+	meta1["pos"] = 1
+	meta1["got"] = 0
+	local newBuff = ({["handle"]=fileHandle,["cdata"]=({tag = "list", n = 0}),["meta"]=meta1,["parser"]=genParser1("lua")})
+	fillData1(newBuff)
+	return newBuff
+end)
+fillData1 = (function(buffer)
+	buffer["handle"]["open"](buffer["handle"])
+	local temp = buffer["meta"]["pos"] + buffer["meta"]["size"] + -1
+	local temp1 = buffer["meta"]["got"]
+	while temp1 <= temp do
+		pushCdr_21_1(buffer["cdata"], car1(buffer["handle"]["read"](buffer["handle"], 1)))
+		temp1 = temp1 + 1
+	end
+	return buffer["meta"]["parser"]["parse-lines"](buffer["meta"]["parser"], slice1(buffer["cdata"], (buffer["pos"] - 1) + 1, nil), buffer["pos"])
+end)
+genHandle1 = (function()
+	return ({["open"]=openHand1,["read"]=readHand1,["write"]=writeHand1,["close"]=closeHand1,["cleanup"]=cleanHand1,["data"]=({["text"]="Hello world",["openmode"]=0,["ptr"]=0})})
+end)
+openHand1 = (function(handle, mode)
+	handle["data"]["ptr"] = 0
+	if mode == 2 then
+		handle["data"]["text"] = ""
+		return nil
+	else
+		return nil
+	end
+end)
+closeHand1 = (function(handle)
+	return nil
+end)
+cleanHand1 = (function(handle)
+	return nil
+end)
+readHand1 = (function(handle, amount)
+	local lines = split1(handle["data"]["text"], "[^\n]+", amount + handle["data"]["ptr"])
+	slice1(lines, handle["data"]["ptr"] + 1, nil)
+	_5e7e_1(handle, _3c3e_1(on_21_1("ptr"), on1("data")), (function(temp)
+		return temp + amount
+	end))
+	return lines
+end)
+writeHand1 = (function(handle, data)
+	if not (handle["data"]["openmode"] == 2) then
+		error1("Handle not opened in write mode", 0)
+	end
+	handle["data"]["text"] = handle["data"]["text"] .. data
+	return nil
+end)
+imanagerVars1 = ({})
+init1 = (function()
+	local lens, new = on_21_1("container"), genContainer1()
+	_5e7e_1(imanagerVars1, lens, (function(x)
+		return new
+	end))
+	local container, element = imanagerVars1["container"], ({["pref-w"]=0,["pref-h"]=0,["buffer"]=(initBuffer1(genHandle1()))})
+	pushCdr_21_1(container["content"], element)
+	return queueEvent1("fakeNews")
+end)
+update1 = (function()
+	pullEvent1()
+	return drawContainer1(imanagerVars1["container"], ({tag = "list", n = 4, 1, 1, screenBuffer1["width"], screenBuffer1["height"]}))
+end)
+drawContainer1 = (function(cont, cpos)
+	local pos = append1(({tag = "list", n = 0}), cpos)
+	local dw, dh, temp = pos[3] / n1(cont["content"]), pos[4] / n1(cont["content"]), cont["content"]
+	local temp1 = n1(temp)
+	local temp2 = 1
+	while temp2 <= temp1 do
+		local child = temp[temp2]
+		local childpos = append1(({tag = "list", n = 0}), pos)
+		childpos[3] = dw
+		childpos[4] = dh
+		if child["orient"] then
+			drawContainer1(child, childpos)
+		end
+		if cont["orient"] == 1 then
+			_5e7e_1(pos, on_21_1(1), (function(temp3)
+				return temp3 + dw
+			end))
+		elseif cont["orient"] == 2 then
+			_5e7e_1(pos, on_21_1(2), (function(temp3)
+				return temp3 + dh
+			end))
+		else
+			_error("unmatched item")
+		end
+		temp2 = temp2 + 1
+	end
+	return nil
 end)
 print1(pretty1(self1(genParser1("lua"), "parse-lines", ({tag = "list", n = 1, "local function hey() print('hello world') return true end"}), 1)))
 vimVars1 = ({["state"]="normal",["running"]=true})
