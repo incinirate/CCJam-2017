@@ -7,7 +7,7 @@
     :write write-hand
     :close close-hand
     :cleanup clean-hand 
-    :data { :text "-- Hello world\nlocal i = 2\nfunction hello()\n  print(\"Hello!\")\nend" :openmode enums/*mode-closed* :ptr 0 } })
+    :data { :text "-- Hello world\n\nlocal i = 2\nfunction hello()\n  print(\"Hello!\")\nend\n\n--[[cool\nmultiline\ncomment]]\n\nprint([[It works!\nAll of it!]])\n" :openmode enums/*mode-closed* :ptr 0 } })
 
 (defun open-hand (handle mode)
   "Opens HANDLE for MODE (*mode-read* or *mode-write*)"
@@ -30,10 +30,10 @@
       (^~ handle (<> (on! :ptr) (on :data)) (cut + <> amount))
       ;; (print! (.> handle :data :ptr))
       ;; (print! (pretty result))
-      ;; (io/read)
+      ;; ;; (io/read)
       ;; (print! (.> handle :data :text))
-      ;; (print! (pretty lines))
-      ;; (fail!)
+      ;; ;; (print! (pretty lines))
+      ;; (io/read)
       result)))
 
 (defun write-hand (handle data)

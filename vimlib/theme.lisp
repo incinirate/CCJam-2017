@@ -1,5 +1,5 @@
 (define colors { :other   "0"
-                 :keyword "2"
+                 :keyword "5" ;;13
                  :comment "8"
                  :string  "9"
                  :number  "a"

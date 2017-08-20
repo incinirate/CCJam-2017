@@ -9,7 +9,8 @@
 (import vimlib/util (for-eachi))
 
 (with (parser (parser/gen-parser "lua"))
-  (print! (pretty (self parser :parse-lines '("local function hey() print('hello world') return true end") 1))))
+  (print! (pretty (self parser :parse-lines '("-- Hello world" "local i = 2" "function hello()" "  print(\"Hello!\")" "end") 4))))
+(io/read)
 
 (define vim-vars { :state "normal"
                    :running true })

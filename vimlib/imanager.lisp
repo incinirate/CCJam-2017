@@ -17,7 +17,7 @@
 
 (defun init ()
   (.<! imanager-vars :container (gen-container enums/*cont-vert*))
-  (push-cont (.> imanager-vars :container) (gen-window (init-buffer (empty-handle/gen-handle) `(:size ,(.> screen-buffer :height)))))
+  (push-cont (.> imanager-vars :container) (gen-window (init-buffer (empty-handle/gen-handle) { :size (.> screen-buffer :height) })))
   (os/queueEvent "fakeNews"))
 
 (defun update ()
@@ -49,6 +49,7 @@
       (for j 1 (n text-p) 2
         (with (part (nth text-p (+ j 1)))
           (when (= (type part) "string")
-            (write-buff screen-buffer (car xp) (+ i (.> pos 2) -1) part 
+            (when (nil? (.> colors (nth text-p j))) (print! text-p) (fail!))
+            (write-buff screen-buffer (car xp) (+ i (.> pos 2) -1) part   
               (string/rep "7" (n part)) (string/rep (default (.> colors (nth text-p j)) "f") (n part)))
             (.<! xp 1 (+ (car xp) (n part))))))))))

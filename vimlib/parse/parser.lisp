@@ -37,7 +37,7 @@
     (for-eachi (i line) lines
       (.<! parser :state {})
       (with (temp-state (or
-                          (.> parser :cache (+ line-index i -2))
+                          (debug (.> parser :cache (+ line-index i -2)))
                           (self parser :prev-state line-index)
                           ((.> parser :lang-api :init-state))))
         (for-pairs (k v) temp-state
@@ -66,5 +66,5 @@
         (push-cdr! result (self stream :current))
         (.<! stream :start (.> stream :pos))))
     (if (= (n result) 0)
-      '("other" line)
+      `("other" ,line)
       result)))

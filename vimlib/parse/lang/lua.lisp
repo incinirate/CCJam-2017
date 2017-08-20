@@ -1,7 +1,7 @@
 (define keywords (create-lookup
   '("and" "break" "do" "else" "elseif" "end" "false" "for" "function" "if" "in"
     "local" "nil" "not" "or" "repeat" "return" "then" "true" "until" "while")))
-(define api (create-lookup '(:drawPixel)))
+(define api (create-lookup '("print")))
 (define escapable (create-lookup '(:a :b :f :n :r :t :v "\\" "\"" "'")))
 
 (defun init-state ()
@@ -15,7 +15,8 @@
         (cond
           [(and (= char "-") (self stream :eat "%-"))
             (if (self stream :match "%[%[")
-              (progn 
+              (progn
+                (.<! state :c-token "multiline-comment")
                 (if (self stream :skip-to "%]%]")
                   (progn 
                     (self stream :next)
@@ -62,7 +63,8 @@
                 "string"))]
           [(= char (.> state :starter))
             (.<! state :starter "")
-            (.<! state :c-token "root")]
+            (.<! state :c-token "root")
+            "string"]
           [(self stream :eol)
             (.<! state :c-token "root")]
           [true "string"]))]
@@ -80,5 +82,12 @@
             (.<! state :c-token "root")
             "string"]
           [true "string"]))]
+    ["multiline-comment"
+      (with (char (self stream :next))
+        (cond
+          [(and (= char "]") (self stream :eat "%]"))
+            (.<! state :c-token "root")
+            "comment"]
+          [true "comment"]))]
     [else
       (error! (.. "Invalid parse state `" (.> state :c-token) "`"))]))

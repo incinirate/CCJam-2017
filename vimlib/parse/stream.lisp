@@ -29,7 +29,7 @@
     (> (.> stream :pos) st)))
 
 (defun skip-to (stream char)
-  (with ((start end) (string/find stream char (.> stream :pos)))
+  (with ((start end) (string/find (.> stream :string) char (.> stream :pos)))
     (when (and start (>= start (.> stream :pos)))
       (.<! stream :pos end)
       true)))
@@ -38,7 +38,7 @@
   (.<! stream :pos (+ 1 (n (.> stream :string)))))
 
 (defun eol (stream)
-  (> (.> stream :pos) (n (.> stream :string))))
+  (> (.> stream :pos) (n (or (.> stream :string) ""))))
 
 (defun next (stream)
   (when (<= (.> stream :pos) (n (.> stream :string)))
