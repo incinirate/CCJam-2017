@@ -3,7 +3,7 @@ if not table.unpack then table.unpack = unpack end
 local load = load if _VERSION:find("5.1") then load = function(x, n, _, env) local f, e = loadstring(x, n) if not f then return f, e end if env then setfenv(f, env) end return f end end
 local _select, _unpack, _pack, _error = select, table.unpack, table.pack, error
 local _libs = {}
-local _3d_1, _2f3d_1, _3c_1, _3c3d_1, _3e_1, _3e3d_1, _2b_1, _2d_1, _2f_1, _25_1, _2e2e_1, arg_23_1, len_23_1, error1, getmetatable1, next1, print1, getIdx1, setIdx_21_1, setmetatable1, tonumber1, tostring1, type_23_1, n1, slice1, find1, format1, lower1, match1, rep1, sub1, upper1, concat1, unpack1, list1, arg1, constVal1, apply1, first1, empty_3f_1, string_3f_1, number_3f_1, type1, neq_3f_1, map1, keys1, put_21_1, eq_3f_1, pretty1, floor1, max1, min1, car1, cdr1, map2, partition1, nth1, nths1, pushCdr_21_1, append1, range1, reverse1, cadr1, split1, createLookup1, exit1, getenv1, invokable_3f_1, compose1, lens1, getter_3f_1, setter_3f_1, composeInner1, _3c3e_1, _5e2e_1, _5e7e_1, on1, on_21_1, succ1, exit_21_1, self1, config1, coloredAnsi1, colored_3f_1, colored1, create1, setAction1, addAction1, addArgument_21_1, addHelp_21_1, usageNarg_21_1, usage_21_1, helpArgs_21_1, help_21_1, matcher1, parse_21_1, setTextColor1, setCursorPos1, blit1, getSize1, genLv1, setPixel1, writeBuff1, drawBuff1, genBuffer1, screenBuffer1, pullEvent1, queueEvent1, colors1, genContainer1, genStream1, peek1, match2, eat1, eatWhile1, skipTo1, skipToEnd1, eol1, next2, backUp1, current1, keywords1, api1, escapable1, initState1, nextToken1, langApi1, genParser1, prevState1, parseLines1, parseLine1, initBuffer1, fillData1, genHandle1, openHand1, closeHand1, cleanHand1, readHand1, writeHand1, imanagerVars1, init1, update1, drawContainer1, drawBuffer1, vimVars1
+local _ENV = setmetatable({}, {__index=ENV or (getfenv and getfenv()) or _G}) if setfenv then setfenv(0, _ENV) end
 _3d_1 = function(v1, v2) return v1 == v2 end
 _2f3d_1 = function(v1, v2) return v1 ~= v2 end
 _3c_1 = function(v1, v2) return v1 < v2 end
@@ -17,6 +17,7 @@ _25_1 = function(...) local t = ... for i = 2, _select('#', ...) do t = t % _sel
 _2e2e_1 = function(...) local n = _select('#', ...) local t = _select(n, ...) for i = n - 1, 1, -1 do t = _select(i, ...) .. t end return t end
 arg_23_1 = arg or {...}
 len_23_1 = function(v1) return #v1 end
+dofile1 = dofile
 error1 = error
 getmetatable1 = getmetatable
 next1 = next
@@ -1136,6 +1137,7 @@ parse_21_1 = (function(spec, args)
 	return result
 end)
 setTextColor1 = term.setTextColor
+setCursorBlink1 = term.setCursorBlink
 setCursorPos1 = term.setCursorPos
 blit1 = term.blit
 getSize1 = term.getSize
@@ -1229,6 +1231,26 @@ screenBuffer1 = genBuffer1(getSize1())
 pullEvent1 = os.pullEvent
 queueEvent1 = os.queueEvent
 colors1 = ({["other"]="0",["keyword"]="5",["comment"]="8",["string"]="9",["number"]="a",["api"]="4"})
+list2 = fs.list
+plugins1 = map2((function(x)
+	return dofile1(".vimplugins/" .. x)
+end), list1(unpack1(list2(".vimplugins"))))
+genWindow1 = (function(buffer)
+	return ({["pref-w"]=0,["pref-h"]=0,["buffer"]=buffer,["selbuf"]=1,["buffers"]=({tag = "list", n = 1, ({tag = "list", n = 2, buffer, ({["line"]=1,["char"]=1})})}),["prop"]=({["focus"]=false}),["update"]=updateWindow1})
+end)
+updateWindow1 = (function(window, ...)
+	local ev = _pack(...) ev.tag = "list"
+	local temp = n1(plugins1)
+	local temp1 = 1
+	while temp1 <= temp do
+		local plugin = plugins1[temp1]
+		if plugin[car1(ev)] then
+			plugin[car1(ev)](window, cadr1(ev), ({tag = "list", n = 0}))
+		end
+		temp1 = temp1 + 1
+	end
+	return nil
+end)
 genContainer1 = (function(ori)
 	return ({["content"]=({tag = "list", n = 0}),["orient"]=(function()
 		if type_23_1(ori) == "nil" then
@@ -1512,7 +1534,7 @@ fillData1 = (function(buffer)
 	return nil
 end)
 genHandle1 = (function()
-	return ({["open"]=openHand1,["read"]=readHand1,["write"]=writeHand1,["close"]=closeHand1,["cleanup"]=cleanHand1,["data"]=({["text"]="-- Hello world\n\nlocal i = 2\nfunction hello()\n  print(\"Hello!\")\nend\n\n--[[cool\nmultiline\ncomment]]\n\nprint([[It works!\nAll of it!]])\n",["openmode"]=0,["ptr"]=0})})
+	return ({["open"]=openHand1,["read"]=readHand1,["write"]=writeHand1,["close"]=closeHand1,["cleanup"]=cleanHand1,["data"]=({["text"]="-- Hello world\n\nlocal i = 2\nfunction hello()\n  print(\"Hello!\")",["openmode"]=0,["ptr"]=0})})
 end)
 openHand1 = (function(handle, mode)
 	handle["data"]["ptr"] = 0
@@ -1549,13 +1571,31 @@ end)
 imanagerVars1 = ({})
 init1 = (function()
 	imanagerVars1["container"] = genContainer1(2)
-	local container, element = imanagerVars1["container"], ({["pref-w"]=0,["pref-h"]=0,["buffer"]=(initBuffer1(genHandle1(), ({["size"]=screenBuffer1["height"]})))})
+	local container, element = imanagerVars1["container"], genWindow1(initBuffer1(genHandle1(), ({["size"]=screenBuffer1["height"] - 1})))
 	pushCdr_21_1(container["content"], element)
 	return queueEvent1("fakeNews")
 end)
 update1 = (function()
-	pullEvent1()
+	setCursorPos1(unpack1(list1(imanagerVars1["container"]["content"][1]["buffers"][1][2]["char"], imanagerVars1["container"]["content"][1]["buffers"][1][2]["line"])))
+	setCursorBlink1(true)
+	updateContainer1(imanagerVars1["container"], pullEvent1())
 	return drawContainer1(imanagerVars1["container"], ({tag = "list", n = 4, 1, 1, screenBuffer1["width"], screenBuffer1["height"]}))
+end)
+updateContainer1 = (function(cont, ...)
+	local ev = _pack(...) ev.tag = "list"
+	local temp = cont["content"]
+	local temp1 = n1(temp)
+	local temp2 = 1
+	while temp2 <= temp1 do
+		local child = temp[temp2]
+		if child["orient"] then
+			updateContainer1(child)
+		else
+			self1(child, "update", unpack1(ev))
+		end
+		temp2 = temp2 + 1
+	end
+	return nil
 end)
 drawContainer1 = (function(cont, cpos)
 	local pos = append1(({tag = "list", n = 0}), cpos)
@@ -1610,11 +1650,6 @@ drawBuffer1 = (function(window, pos)
 		while temp3 <= temp2 do
 			local part = nth1(textP, temp3 + 1)
 			if type1(part) == "string" then
-				if type_23_1((colors1[nth1(textP, temp3)])) == "nil" then
-					print1(textP)
-					local x
-					error1(nil, 0)
-				end
 				writeBuff1(screenBuffer1, car1(xp), temp1 + pos[2] + -1, part, rep1("7", n1(part)), rep1((function()
 					if type_23_1((colors1[nth1(textP, temp3)])) == "nil" then
 						return "f"
