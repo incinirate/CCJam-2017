@@ -342,7 +342,7 @@ findWord1 = (function(lines)
 	local i, _ebreak, out = 1, false, ({tag = "list", n = 3, 1, 1, 1})
 	while not (_ebreak) do
 		local nxs, nxe = find1(nth1(lines, i), "%w+")
-		i, _ebreak, out = i + 1, not (type_23_1(nxs) == "nil"), ({tag = "list", n = 3, i, nxs or 1, nxe or 1})
+		i, _ebreak, out = i + 1, not (type_23_1(nxs) == "nil") or i == n1(lines), ({tag = "list", n = 3, i, nxs or 0, nxe or 1})
 	end
 	return out
 end)

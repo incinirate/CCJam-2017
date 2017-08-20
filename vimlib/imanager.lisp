@@ -62,7 +62,7 @@
 (defun draw-buffer (window pos)
   (term/setTextColor (^ 2 1))
   (for i (.> window :buffer :meta :pos) (+ (.> window :buffer :meta :pos) (.> window :buffer :meta :size)) 1
-    (with (text-p (.> window :buffer :parsed i))
+    (when-with (text-p (.> window :buffer :parsed i))
       ;; (write-buff screen-buffer 12 2 "ab" "bc" "cd"))))
       (with (xp `(,(.> pos 1)))
       (for j 1 (n text-p) 2

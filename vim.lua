@@ -423,6 +423,15 @@ partition1 = (function(p, xs)
 	end
 	return unpack1(list1(passed, failed), 1, 2)
 end)
+prune1 = (function(xs)
+	local temp = type1(xs)
+	if temp ~= "list" then
+		error1(format1("bad argument %s (expected %s, got %s)", "xs", "list", temp), 2)
+	end
+	return first1(partition1((function(x)
+		return not (type_23_1(x) == "nil") and not empty_3f_1(x)
+	end), xs))
+end)
 nth1 = (function(xs, idx)
 	if idx >= 0 then
 		return xs[idx]
@@ -1522,6 +1531,7 @@ fillData1 = (function(buffer)
 		pushCdr_21_1(buffer["cdata"], car1(buffer["handle"]["read"](buffer["handle"], 1)))
 		temp1 = temp1 + 1
 	end
+	buffer["cdata"] = prune1(buffer["cdata"])
 	local parseOut = buffer["parser"]["parse-lines"](buffer["parser"], slice1(buffer["cdata"], (buffer["meta"]["pos"] - 1) + 1, nil), buffer["meta"]["pos"])
 	local temp = nth1(parseOut, 1)
 	local temp1 = n1(temp)
@@ -1644,22 +1654,24 @@ drawBuffer1 = (function(window, pos)
 	local temp = window["buffer"]["meta"]["pos"] + window["buffer"]["meta"]["size"]
 	local temp1 = window["buffer"]["meta"]["pos"]
 	while temp1 <= temp do
-		local textP, xp = window["buffer"]["parsed"][temp1], ({tag = "list", n = 1, pos[1]})
-		local temp2 = n1(textP)
-		local temp3 = 1
-		while temp3 <= temp2 do
-			local part = nth1(textP, temp3 + 1)
-			if type1(part) == "string" then
-				writeBuff1(screenBuffer1, car1(xp), temp1 + pos[2] + -1, part, rep1("7", n1(part)), rep1((function()
-					if type_23_1((colors1[nth1(textP, temp3)])) == "nil" then
-						return "f"
-					else
-						return colors1[nth1(textP, temp3)]
-					end
-				end)(), n1(part)))
-				xp[1] = car1(xp) + n1(part)
+		local textP = window["buffer"]["parsed"][temp1]
+		if textP then
+			local xp, temp2 = ({tag = "list", n = 1, pos[1]}), n1(textP)
+			local temp3 = 1
+			while temp3 <= temp2 do
+				local part = nth1(textP, temp3 + 1)
+				if type1(part) == "string" then
+					writeBuff1(screenBuffer1, car1(xp), temp1 + pos[2] + -1, part, rep1("7", n1(part)), rep1((function()
+						if type_23_1((colors1[nth1(textP, temp3)])) == "nil" then
+							return "f"
+						else
+							return colors1[nth1(textP, temp3)]
+						end
+					end)(), n1(part)))
+					xp[1] = car1(xp) + n1(part)
+				end
+				temp3 = temp3 + 2
 			end
-			temp3 = temp3 + 2
 		end
 		temp1 = temp1 + 1
 	end

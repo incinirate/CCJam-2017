@@ -23,6 +23,7 @@
   (indself (.> buffer :handle :open))
   (for i (.> buffer :meta :got) (+ (.> buffer :meta :pos) (.> buffer :meta :size) -1) 1
     (push-cdr! (.> buffer :cdata) (car (indself (.> buffer :handle :read) 1))))
+  (.<! buffer :cdata (prune (.> buffer :cdata)))
   (with (parse-out (indself (.> buffer :parser :parse-lines) (drop (.> buffer :cdata) (- (.> buffer :meta :pos) 1)) (.> buffer :meta :pos)))
     (for-eachi (j pline) (nth parse-out 1)
       (.<! (.> buffer :parsed) (+ (.> buffer :meta :pos) j -1) pline))))
