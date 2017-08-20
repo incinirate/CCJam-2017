@@ -37,7 +37,7 @@
     (for-eachi (i line) lines
       (.<! parser :state {})
       (with (temp-state (or
-                          (debug (.> parser :cache (+ line-index i -2)))
+                          (.> parser :cache (+ line-index i -2))
                           (self parser :prev-state line-index)
                           ((.> parser :lang-api :init-state))))
         (for-pairs (k v) temp-state

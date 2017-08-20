@@ -28,12 +28,6 @@
                   (+ amount (.> handle :data :ptr))))
     (with (result (take (drop lines (.> handle :data :ptr)) amount))
       (^~ handle (<> (on! :ptr) (on :data)) (cut + <> amount))
-      ;; (print! (.> handle :data :ptr))
-      ;; (print! (pretty result))
-      ;; ;; (io/read)
-      ;; (print! (.> handle :data :text))
-      ;; ;; (print! (pretty lines))
-      ;; (io/read)
       result)))
 
 (defun write-hand (handle data)

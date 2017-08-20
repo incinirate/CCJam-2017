@@ -3,7 +3,7 @@ if not table.unpack then table.unpack = unpack end
 local load = load if _VERSION:find("5.1") then load = function(x, n, _, env) local f, e = loadstring(x, n) if not f then return f, e end if env then setfenv(f, env) end return f end end
 local _select, _unpack, _pack, _error = select, table.unpack, table.pack, error
 local _libs = {}
-local _3d_1, _2f3d_1, _3c_1, _3c3d_1, _3e_1, _3e3d_1, _2b_1, _2d_1, _2f_1, _25_1, _2e2e_1, arg_23_1, len_23_1, error1, getmetatable1, next1, print1, getIdx1, setIdx_21_1, setmetatable1, tonumber1, tostring1, type_23_1, n1, slice1, find1, format1, lower1, match1, rep1, sub1, upper1, concat1, unpack1, list1, arg1, constVal1, apply1, first1, empty_3f_1, string_3f_1, number_3f_1, type1, neq_3f_1, map1, keys1, put_21_1, eq_3f_1, pretty1, floor1, max1, min1, car1, cdr1, map2, partition1, nth1, nths1, pushCdr_21_1, append1, range1, reverse1, cadr1, split1, createLookup1, exit1, getenv1, invokable_3f_1, compose1, lens1, getter_3f_1, setter_3f_1, composeInner1, _3c3e_1, _5e2e_1, _5e7e_1, on1, on_21_1, read1, succ1, exit_21_1, self1, config1, coloredAnsi1, colored_3f_1, colored1, create1, setAction1, addAction1, addArgument_21_1, addHelp_21_1, usageNarg_21_1, usage_21_1, helpArgs_21_1, help_21_1, matcher1, parse_21_1, setTextColor1, setCursorPos1, blit1, getSize1, genLv1, setPixel1, writeBuff1, drawBuff1, genBuffer1, screenBuffer1, pullEvent1, queueEvent1, colors1, genContainer1, genStream1, peek1, match2, eat1, eatWhile1, skipTo1, skipToEnd1, eol1, next2, backUp1, current1, keywords1, api1, escapable1, initState1, nextToken1, langApi1, genParser1, prevState1, parseLines1, parseLine1, initBuffer1, fillData1, genHandle1, openHand1, closeHand1, cleanHand1, readHand1, writeHand1, imanagerVars1, init1, update1, drawContainer1, drawBuffer1, vimVars1
+local _3d_1, _2f3d_1, _3c_1, _3c3d_1, _3e_1, _3e3d_1, _2b_1, _2d_1, _2f_1, _25_1, _2e2e_1, arg_23_1, len_23_1, error1, getmetatable1, next1, print1, getIdx1, setIdx_21_1, setmetatable1, tonumber1, tostring1, type_23_1, n1, slice1, find1, format1, lower1, match1, rep1, sub1, upper1, concat1, unpack1, list1, arg1, constVal1, apply1, first1, empty_3f_1, string_3f_1, number_3f_1, type1, neq_3f_1, map1, keys1, put_21_1, eq_3f_1, pretty1, floor1, max1, min1, car1, cdr1, map2, partition1, nth1, nths1, pushCdr_21_1, append1, range1, reverse1, cadr1, split1, createLookup1, exit1, getenv1, invokable_3f_1, compose1, lens1, getter_3f_1, setter_3f_1, composeInner1, _3c3e_1, _5e2e_1, _5e7e_1, on1, on_21_1, succ1, exit_21_1, self1, config1, coloredAnsi1, colored_3f_1, colored1, create1, setAction1, addAction1, addArgument_21_1, addHelp_21_1, usageNarg_21_1, usage_21_1, helpArgs_21_1, help_21_1, matcher1, parse_21_1, setTextColor1, setCursorPos1, blit1, getSize1, genLv1, setPixel1, writeBuff1, drawBuff1, genBuffer1, screenBuffer1, pullEvent1, queueEvent1, colors1, genContainer1, genStream1, peek1, match2, eat1, eatWhile1, skipTo1, skipToEnd1, eol1, next2, backUp1, current1, keywords1, api1, escapable1, initState1, nextToken1, langApi1, genParser1, prevState1, parseLines1, parseLine1, initBuffer1, fillData1, genHandle1, openHand1, closeHand1, cleanHand1, readHand1, writeHand1, imanagerVars1, init1, update1, drawContainer1, drawBuffer1, vimVars1
 _3d_1 = function(v1, v2) return v1 == v2 end
 _2f3d_1 = function(v1, v2) return v1 ~= v2 end
 _3c_1 = function(v1, v2) return v1 < v2 end
@@ -656,7 +656,6 @@ on_21_1 = (function(k)
 		return x
 	end))
 end)
-read1 = io.read
 succ1 = (function(x)
 	return x + 1
 end)
@@ -1441,12 +1440,7 @@ parseLines1 = (function(parser, lines, lineIndex)
 	while temp1 <= temp do
 		local line = lines[temp1]
 		parser["state"] = ({})
-		local tempState
-		local temp2
-		local temp3 = parser["cache"][lineIndex + temp1 + -2]
-		print1("" .. pretty1(temp3))
-		temp2 = temp3
-		tempState = temp2 or (self1(parser, "prev-state", lineIndex) or parser["lang-api"]["init-state"]())
+		local tempState = parser["cache"][lineIndex + temp1 + -2] or (self1(parser, "prev-state", lineIndex) or parser["lang-api"]["init-state"]())
 		local temp2, v = next1(tempState)
 		while temp2 ~= nil do
 			parser["state"][temp2] = v
@@ -1490,28 +1484,23 @@ parseLine1 = (function(parser, line, lineIndex)
 	end
 end)
 initBuffer1 = (function(fileHandle, meta)
-	local metaz = meta or ({})
-	metaz["size"] = meta["size"] or 1
-	metaz["pos"] = 1
-	metaz["got"] = 0
-	local newBuff = ({["handle"]=fileHandle,["cdata"]=({tag = "list", n = 0}),["meta"]=metaz,["parser"]=genParser1("lua"),["parsed"]=({})})
+	local meta1 = meta or ({})
+	meta1["size"] = meta1["size"] or 1
+	meta1["pos"] = 1
+	meta1["got"] = 0
+	local newBuff = ({["handle"]=fileHandle,["cdata"]=({tag = "list", n = 0}),["meta"]=meta1,["parser"]=genParser1("lua"),["parsed"]=({})})
 	fillData1(newBuff)
 	return newBuff
 end)
 fillData1 = (function(buffer)
 	buffer["handle"]["open"](buffer["handle"])
-	print1(pretty1(buffer["meta"]), buffer["meta"]["got"], buffer["meta"]["size"], buffer["meta"]["pos"] + buffer["meta"]["size"] + -1)
-	read1()
 	local temp = buffer["meta"]["pos"] + buffer["meta"]["size"] + -1
 	local temp1 = buffer["meta"]["got"]
 	while temp1 <= temp do
 		pushCdr_21_1(buffer["cdata"], car1(buffer["handle"]["read"](buffer["handle"], 1)))
 		temp1 = temp1 + 1
 	end
-	print1(pretty1(slice1(buffer["cdata"], (buffer["meta"]["pos"] - 1) + 1, nil)))
-	read1()
 	local parseOut = buffer["parser"]["parse-lines"](buffer["parser"], slice1(buffer["cdata"], (buffer["meta"]["pos"] - 1) + 1, nil), buffer["meta"]["pos"])
-	print1(pretty1(parseOut))
 	local temp = nth1(parseOut, 1)
 	local temp1 = n1(temp)
 	local temp2 = 1
@@ -1641,8 +1630,6 @@ drawBuffer1 = (function(window, pos)
 	end
 	return nil
 end)
-print1(pretty1(self1(genParser1("lua"), "parse-lines", ({tag = "list", n = 5, "-- Hello world", "local i = 2", "function hello()", "  print(\"Hello!\")", "end"}), 4)))
-read1()
 vimVars1 = ({["state"]="normal",["running"]=true})
 local spec = create1()
 addHelp_21_1(spec)
