@@ -17,6 +17,15 @@
 
   (^= (.> buff :old-rep) (on! y) true))
 
+(defun write-buff (buff x y ds bs fs)
+  (let [(x (math/floor x))
+        (y (math/floor y))]
+    (for i 1 (n ds) 1
+      (let [(d (string/sub ds i i))
+            (b (string/sub bs i i))
+            (f (string/sub fs i i))]
+        (set-pixel buff (+ x i -1) y d b f)))))
+
 (defun draw-buff (buff)
   "Blit the buffer BUFF to the screen"
   (for i 1 (.> buff :height) 1

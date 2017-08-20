@@ -1,4 +1,4 @@
-(import vimlib/util (default indself))
+(import vimlib/util (default indself for-eachi))
 (import vimlib/enums enums)
 (import vimlib/parse/parser parser)
 
@@ -10,7 +10,8 @@
     (with (new-buff { :handle file-handle
                       :cdata '()
                       :meta meta
-                      :parser (parser/gen-parser "lua") })
+                      :parser (parser/gen-parser "lua")
+                      :parsed {} })
       (fill-data new-buff)
       new-buff)))
 
@@ -22,4 +23,7 @@
   (indself (.> buffer :handle :open))
   (for i (.> buffer :meta :got) (+ (.> buffer :meta :pos) (.> buffer :meta :size) -1) 1
     (push-cdr! (.> buffer :cdata) (car (indself (.> buffer :handle :read) 1))))
-  (indself (.> buffer :meta :parser :parse-lines) (drop (.> buffer :cdata) (- (.> buffer :pos) 1)) (.> buffer :pos)))
+  (with (parse-out (indself (.> buffer :parser :parse-lines) (drop (.> buffer :cdata) (- (.> buffer :meta :pos) 1)) (.> buffer :meta :pos)))
+    (print! (pretty parse-out))
+    (for-eachi (j pline) (nth parse-out 1)
+      (.<! (.> buffer :parsed) (+ (.> buffer :meta :pos) j -1) pline))))

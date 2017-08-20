@@ -3,7 +3,7 @@ if not table.unpack then table.unpack = unpack end
 local load = load if _VERSION:find("5.1") then load = function(x, n, _, env) local f, e = loadstring(x, n) if not f then return f, e end if env then setfenv(f, env) end return f end end
 local _select, _unpack, _pack, _error = select, table.unpack, table.pack, error
 local _libs = {}
-local _3d_1, _2f3d_1, _3c_1, _3c3d_1, _3e_1, _3e3d_1, _2b_1, _2d_1, _2f_1, _25_1, _2e2e_1, arg_23_1, len_23_1, error1, getmetatable1, next1, print1, getIdx1, setIdx_21_1, setmetatable1, tonumber1, tostring1, type_23_1, n1, slice1, find1, format1, lower1, match1, rep1, sub1, upper1, concat1, unpack1, list1, arg1, constVal1, apply1, first1, empty_3f_1, string_3f_1, number_3f_1, type1, neq_3f_1, map1, keys1, put_21_1, eq_3f_1, pretty1, max1, min1, car1, cdr1, map2, partition1, nth1, nths1, pushCdr_21_1, append1, range1, reverse1, cadr1, split1, createLookup1, exit1, getenv1, invokable_3f_1, compose1, lens1, getter_3f_1, setter_3f_1, composeInner1, _3c3e_1, _5e2e_1, _5e7e_1, on1, on_21_1, succ1, exit_21_1, self1, config1, coloredAnsi1, colored_3f_1, colored1, create1, setAction1, addAction1, addArgument_21_1, addHelp_21_1, usageNarg_21_1, usage_21_1, helpArgs_21_1, help_21_1, matcher1, parse_21_1, setCursorPos1, blit1, getSize1, genLv1, drawBuff1, genBuffer1, screenBuffer1, pullEvent1, queueEvent1, genContainer1, genStream1, peek1, match2, eat1, eatWhile1, skipTo1, skipToEnd1, eol1, next2, backUp1, current1, keywords1, api1, escapable1, initState1, nextToken1, langApi1, genParser1, prevState1, parseLines1, parseLine1, initBuffer1, fillData1, genHandle1, openHand1, closeHand1, cleanHand1, readHand1, writeHand1, imanagerVars1, init1, update1, drawContainer1, vimVars1
+local _3d_1, _2f3d_1, _3c_1, _3c3d_1, _3e_1, _3e3d_1, _2b_1, _2d_1, _2f_1, _25_1, _2e2e_1, arg_23_1, len_23_1, error1, getmetatable1, next1, print1, getIdx1, setIdx_21_1, setmetatable1, tonumber1, tostring1, type_23_1, n1, slice1, find1, format1, lower1, match1, rep1, sub1, upper1, concat1, unpack1, list1, arg1, constVal1, apply1, first1, empty_3f_1, string_3f_1, number_3f_1, type1, neq_3f_1, map1, keys1, put_21_1, eq_3f_1, pretty1, floor1, max1, min1, car1, cdr1, map2, partition1, nth1, nths1, pushCdr_21_1, append1, range1, reverse1, cadr1, split1, createLookup1, exit1, getenv1, invokable_3f_1, compose1, lens1, getter_3f_1, setter_3f_1, composeInner1, _3c3e_1, _5e2e_1, _5e7e_1, on1, on_21_1, succ1, exit_21_1, self1, config1, coloredAnsi1, colored_3f_1, colored1, create1, setAction1, addAction1, addArgument_21_1, addHelp_21_1, usageNarg_21_1, usage_21_1, helpArgs_21_1, help_21_1, matcher1, parse_21_1, setTextColor1, setCursorPos1, blit1, getSize1, genLv1, setPixel1, writeBuff1, drawBuff1, genBuffer1, screenBuffer1, pullEvent1, queueEvent1, colors1, genContainer1, genStream1, peek1, match2, eat1, eatWhile1, skipTo1, skipToEnd1, eol1, next2, backUp1, current1, keywords1, api1, escapable1, initState1, nextToken1, langApi1, genParser1, prevState1, parseLines1, parseLine1, initBuffer1, fillData1, genHandle1, openHand1, closeHand1, cleanHand1, readHand1, writeHand1, imanagerVars1, init1, update1, drawContainer1, drawBuffer1, vimVars1
 _3d_1 = function(v1, v2) return v1 == v2 end
 _2f3d_1 = function(v1, v2) return v1 ~= v2 end
 _3c_1 = function(v1, v2) return v1 < v2 end
@@ -162,7 +162,7 @@ keys1 = (function(x)
 		temp, _ = next1(x, temp)
 	end
 	out["n"] = n
-	return unpack1(out, 1, n(out))
+	return unpack1(out, 1, out["n"])
 end)
 put_21_1 = (function(t, typs, l)
 	while not (type1(typs) == "list" and n1(typs) == 1) do
@@ -268,6 +268,18 @@ put_21_1(eq_3f_1, list1("lookup", "key", "key"), (function(myself)
 	end)
 	return myself
 end)(nil))
+put_21_1(eq_3f_1, list1("lookup", "number", "number"), (function(myself)
+	myself = (function(x, y)
+		return constVal1(x) == constVal1(y)
+	end)
+	return myself
+end)(nil))
+put_21_1(eq_3f_1, list1("lookup", "string", "string"), (function(myself)
+	myself = (function(x, y)
+		return constVal1(x) == constVal1(y)
+	end)
+	return myself
+end)(nil))
 eq_3f_1["default"] = (function(myself)
 	myself = (function(x, y)
 		return false
@@ -353,6 +365,7 @@ pretty1["default"] = (function(myself)
 	end)
 	return myself
 end)(nil)
+floor1 = math.floor
 max1 = math.max
 min1 = math.min
 car1 = (function(x)
@@ -1134,6 +1147,7 @@ parse_21_1 = (function(spec, args)
 	end
 	return result
 end)
+setTextColor1 = term.setTextColor
 setCursorPos1 = term.setCursorPos
 blit1 = term.blit
 getSize1 = term.getSize
@@ -1153,6 +1167,48 @@ genLv1 = (function(val, size)
 		end
 	end
 	return out
+end)
+setPixel1 = (function(buff, x, y, d, b, f)
+	if not (type_23_1(d) == "nil") then
+		local val, lens = nth1(buff["cur-rep"], y), on_21_1(1)
+		local new
+		local temp = nth1(nth1(buff["cur-rep"], y), 1)
+		new = sub1(temp, 1, x - 1) .. d .. sub1(temp, x + 1)
+		_5e7e_1(val, lens, (function(x1)
+			return new
+		end))
+	end
+	if not (type_23_1(b) == "nil") then
+		local val, lens = nth1(buff["cur-rep"], y), on_21_1(2)
+		local new
+		local temp = nth1(nth1(buff["cur-rep"], y), 2)
+		new = sub1(temp, 1, x - 1) .. b .. sub1(temp, x + 1)
+		_5e7e_1(val, lens, (function(x1)
+			return new
+		end))
+	end
+	if not (type_23_1(f) == "nil") then
+		local val, lens = nth1(buff["cur-rep"], y), on_21_1(3)
+		local new
+		local temp = nth1(nth1(buff["cur-rep"], y), 3)
+		new = sub1(temp, 1, x - 1) .. f .. sub1(temp, x + 1)
+		_5e7e_1(val, lens, (function(x1)
+			return new
+		end))
+	end
+	return _5e7e_1(buff["old-rep"], on_21_1(y), (function(x1)
+		return true
+	end))
+end)
+writeBuff1 = (function(buff, x, y, ds, bs, fs)
+	local x1, y1, temp = floor1(x), floor1(y), n1(ds)
+	local temp1 = 1
+	while temp1 <= temp do
+		local d, b, f = sub1(ds, temp1, temp1), sub1(bs, temp1, temp1), sub1(fs, temp1, temp1)
+		setPixel1(buff, x1 + temp1 + -1, y1, d, b, f)
+		temp1 = temp1 + 1
+	end
+	return nil
 end)
 drawBuff1 = (function(buff)
 	local temp = buff["height"]
@@ -1184,6 +1240,7 @@ end)
 screenBuffer1 = genBuffer1(getSize1())
 pullEvent1 = os.pullEvent
 queueEvent1 = os.queueEvent
+colors1 = ({["other"]="0",["keyword"]="2",["comment"]="8",["string"]="9",["number"]="a",["api"]="4"})
 genContainer1 = (function(ori)
 	return ({["content"]=({tag = "list", n = 0}),["orient"]=(function()
 		if type_23_1(ori) == "nil" then
@@ -1446,7 +1503,7 @@ initBuffer1 = (function(fileHandle, meta)
 	end)()
 	meta1["pos"] = 1
 	meta1["got"] = 0
-	local newBuff = ({["handle"]=fileHandle,["cdata"]=({tag = "list", n = 0}),["meta"]=meta1,["parser"]=genParser1("lua")})
+	local newBuff = ({["handle"]=fileHandle,["cdata"]=({tag = "list", n = 0}),["meta"]=meta1,["parser"]=genParser1("lua"),["parsed"]=({})})
 	fillData1(newBuff)
 	return newBuff
 end)
@@ -1458,10 +1515,20 @@ fillData1 = (function(buffer)
 		pushCdr_21_1(buffer["cdata"], car1(buffer["handle"]["read"](buffer["handle"], 1)))
 		temp1 = temp1 + 1
 	end
-	return buffer["meta"]["parser"]["parse-lines"](buffer["meta"]["parser"], slice1(buffer["cdata"], (buffer["pos"] - 1) + 1, nil), buffer["pos"])
+	local parseOut = buffer["parser"]["parse-lines"](buffer["parser"], slice1(buffer["cdata"], (buffer["meta"]["pos"] - 1) + 1, nil), buffer["meta"]["pos"])
+	print1(pretty1(parseOut))
+	local temp = nth1(parseOut, 1)
+	local temp1 = n1(temp)
+	local temp2 = 1
+	while temp2 <= temp1 do
+		local pline = temp[temp2]
+		buffer["parsed"][buffer["meta"]["pos"] + temp2 + -1] = pline
+		temp2 = temp2 + 1
+	end
+	return nil
 end)
 genHandle1 = (function()
-	return ({["open"]=openHand1,["read"]=readHand1,["write"]=writeHand1,["close"]=closeHand1,["cleanup"]=cleanHand1,["data"]=({["text"]="Hello world",["openmode"]=0,["ptr"]=0})})
+	return ({["open"]=openHand1,["read"]=readHand1,["write"]=writeHand1,["close"]=closeHand1,["cleanup"]=cleanHand1,["data"]=({["text"]="-- Hello world\nlocal i = 2\nfunction hello()\n  print(\"Hello!\")\nend",["openmode"]=0,["ptr"]=0})})
 end)
 openHand1 = (function(handle, mode)
 	handle["data"]["ptr"] = 0
@@ -1479,12 +1546,14 @@ cleanHand1 = (function(handle)
 	return nil
 end)
 readHand1 = (function(handle, amount)
-	local lines = split1(handle["data"]["text"], "[^\n]+", amount + handle["data"]["ptr"])
-	slice1(lines, handle["data"]["ptr"] + 1, nil)
+	local lines = split1(handle["data"]["text"], "\n", amount + handle["data"]["ptr"])
+	local result
+	local xs = slice1(lines, handle["data"]["ptr"] + 1, nil)
+	result = slice1(xs, 1, min1(amount, n1(xs)))
 	_5e7e_1(handle, _3c3e_1(on_21_1("ptr"), on1("data")), (function(temp)
 		return temp + amount
 	end))
-	return lines
+	return result
 end)
 writeHand1 = (function(handle, data)
 	if not (handle["data"]["openmode"] == 2) then
@@ -1495,11 +1564,8 @@ writeHand1 = (function(handle, data)
 end)
 imanagerVars1 = ({})
 init1 = (function()
-	local lens, new = on_21_1("container"), genContainer1()
-	_5e7e_1(imanagerVars1, lens, (function(x)
-		return new
-	end))
-	local container, element = imanagerVars1["container"], ({["pref-w"]=0,["pref-h"]=0,["buffer"]=(initBuffer1(genHandle1()))})
+	imanagerVars1["container"] = genContainer1(2)
+	local container, element = imanagerVars1["container"], ({["pref-w"]=0,["pref-h"]=0,["buffer"]=(initBuffer1(genHandle1(), ({tag = "list", n = 2, ({tag="key", value="size"}), 19})))})
 	pushCdr_21_1(container["content"], element)
 	return queueEvent1("fakeNews")
 end)
@@ -1509,7 +1575,19 @@ update1 = (function()
 end)
 drawContainer1 = (function(cont, cpos)
 	local pos = append1(({tag = "list", n = 0}), cpos)
-	local dw, dh, temp = pos[3] / n1(cont["content"]), pos[4] / n1(cont["content"]), cont["content"]
+	local dw, dh, temp = pos[3] / (function()
+		if cont["orient"] == 1 then
+			return n1(cont["content"])
+		else
+			return 1
+		end
+	end)(), pos[4] / (function()
+		if cont["orient"] == 2 then
+			return n1(cont["content"])
+		else
+			return 1
+		end
+	end)(), cont["content"]
 	local temp1 = n1(temp)
 	local temp2 = 1
 	while temp2 <= temp1 do
@@ -1519,6 +1597,8 @@ drawContainer1 = (function(cont, cpos)
 		childpos[4] = dh
 		if child["orient"] then
 			drawContainer1(child, childpos)
+		else
+			drawBuffer1(child, childpos)
 		end
 		if cont["orient"] == 1 then
 			_5e7e_1(pos, on_21_1(1), (function(temp3)
@@ -1532,6 +1612,32 @@ drawContainer1 = (function(cont, cpos)
 			_error("unmatched item")
 		end
 		temp2 = temp2 + 1
+	end
+	return nil
+end)
+drawBuffer1 = (function(window, pos)
+	setTextColor1(2.0)
+	local temp = window["buffer"]["meta"]["pos"] + window["buffer"]["meta"]["size"]
+	local temp1 = window["buffer"]["meta"]["pos"]
+	while temp1 <= temp do
+		local textP, xp = window["buffer"]["parsed"][temp1], ({tag = "list", n = 1, pos[1]})
+		local temp2 = n1(textP)
+		local temp3 = 1
+		while temp3 <= temp2 do
+			local part = nth1(textP, temp3 + 1)
+			if type1(part) == "string" then
+				writeBuff1(screenBuffer1, car1(xp), temp1 + pos[2] + -1, part, rep1("7", n1(part)), rep1((function()
+					if type_23_1((colors1[nth1(textP, temp3)])) == "nil" then
+						return "f"
+					else
+						return colors1[nth1(textP, temp3)]
+					end
+				end)(), n1(part)))
+				xp[1] = car1(xp) + n1(part)
+			end
+			temp3 = temp3 + 2
+		end
+		temp1 = temp1 + 1
 	end
 	return nil
 end)
