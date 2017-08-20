@@ -1,4 +1,5 @@
 vim.lua linguist-generated
+plugins/*.lua linguist-generated
 extlib/* linguist-vendored
 
 *.lisp linguist-language=lisp
