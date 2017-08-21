@@ -666,6 +666,7 @@ on_21_1 = (function(k)
 		return x
 	end))
 end)
+read1 = io.read
 succ1 = (function(x)
 	return x + 1
 end)
@@ -1150,6 +1151,7 @@ setCursorBlink1 = term.setCursorBlink
 setCursorPos1 = term.setCursorPos
 blit1 = term.blit
 getSize1 = term.getSize
+write1 = term.write
 genLv1 = (function(val, size)
 	local out = ({tag = "list", n = 0})
 	if type1(val) == "list" then
@@ -1588,11 +1590,17 @@ end)
 update1 = (function()
 	setCursorPos1(unpack1(list1(imanagerVars1["container"]["content"][1]["buffers"][1][2]["char"], imanagerVars1["container"]["content"][1]["buffers"][1][2]["line"])))
 	setCursorBlink1(true)
-	updateContainer1(imanagerVars1["container"], pullEvent1())
+	local ev = list1(pullEvent1())
+	if car1(ev) == "char" and nth1(ev, 2) == ":" then
+		setCursorPos1(1, screenBuffer1["height"])
+		write1(":")
+		read1()
+	else
+		updateContainer1(imanagerVars1["container"], ev)
+	end
 	return drawContainer1(imanagerVars1["container"], ({tag = "list", n = 4, 1, 1, screenBuffer1["width"], screenBuffer1["height"]}))
 end)
-updateContainer1 = (function(cont, ...)
-	local ev = _pack(...) ev.tag = "list"
+updateContainer1 = (function(cont, ev)
 	local temp = cont["content"]
 	local temp1 = n1(temp)
 	local temp2 = 1

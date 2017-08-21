@@ -3,7 +3,7 @@ if not table.unpack then table.unpack = unpack end
 local load = load if _VERSION:find("5.1") then load = function(x, n, _, env) local f, e = loadstring(x, n) if not f then return f, e end if env then setfenv(f, env) end return f end end
 local _select, _unpack, _pack, _error = select, table.unpack, table.pack, error
 local _libs = {}
-local _3d_1, _2f3d_1, _3c_1, _3c3d_1, _3e3d_1, _2b_1, _2d_1, _2e2e_1, len_23_1, error1, getmetatable1, next1, getIdx1, setIdx_21_1, setmetatable1, tostring1, type_23_1, n1, slice1, find1, format1, sub1, concat1, unpack1, list1, constVal1, type1, neq_3f_1, map1, keys1, put_21_1, eq_3f_1, pretty1, car1, nth1, lens1, getter_3f_1, setter_3f_1, _5e2e_1, _5e7e_1, on_21_1, findWord1, afterWord1, char1
+local _3d_1, _2f3d_1, _3c_1, _3c3d_1, _3e3d_1, _2b_1, _2d_1, _2e2e_1, len_23_1, error1, getmetatable1, next1, getIdx1, setIdx_21_1, setmetatable1, tostring1, type_23_1, n1, slice1, find1, format1, sub1, concat1, unpack1, list1, constVal1, type1, neq_3f_1, map1, keys1, put_21_1, eq_3f_1, pretty1, car1, nth1, cadr1, lens1, getter_3f_1, setter_3f_1, _5e2e_1, _5e7e_1, on_21_1, findWord1, afterWord1, char1
 _3d_1 = function(v1, v2) return v1 == v2 end
 _2f3d_1 = function(v1, v2) return v1 ~= v2 end
 _3c_1 = function(v1, v2) return v1 < v2 end
@@ -305,6 +305,13 @@ nth1 = (function(xs, idx)
 		return xs[xs["n"] + 1 + idx]
 	end
 end)
+cadr1 = (function(xs)
+	local temp = type1(xs)
+	if temp ~= "list" then
+		error1(format1("bad argument %s (expected %s, got %s)", "xs", "list", temp), 2)
+	end
+	return xs[2]
+end)
 lens1 = (function(view, over)
 	return setmetatable1(({["tag"]="lens",["view"]=view,["over"]=over}), ({["__call"]=(function(t, x)
 		return _5e2e_1(x, t)
@@ -342,11 +349,10 @@ findWord1 = (function(lines)
 	local i, _ebreak, out = 1, false, ({tag = "list", n = 3, 1, 1, 1})
 	while not (_ebreak) do
 		local nxs, nxe = find1(nth1(lines, i), "%w+")
-		i, _ebreak, out = i + 1, not (type_23_1(nxs) == "nil") or i == n1(lines), ({tag = "list", n = 3, i, nxs or 0, nxe or 1})
+		i, _ebreak, out = i + 1, not (type_23_1(nxs) == "nil") or i == n1(lines), ({tag = "list", n = 3, i, nxs or 1, nxe or 1})
 	end
 	return out
 end)
-local _ = ({})
 afterWord1 = (function(str, start)
 	local rs, re = find1(str, "%w+", start)
 	if rs == start then
@@ -355,6 +361,7 @@ afterWord1 = (function(str, start)
 		return start
 	end
 end)
+local _ = ({})
 char1 = (function(window, k, prev)
 	local bufc = window["buffers"][window["selbuf"]]
 	if k == "w" then
@@ -363,12 +370,16 @@ char1 = (function(window, k, prev)
 		local _, next = _5e7e_1(lines, on_21_1(1), (function(temp)
 			return sub1(temp, after)
 		end)), findWord1(lines)
-		if car1(next) == 1 then
-			bufc[2] = ({["line"]=bufc[2]["line"] + car1(next) + -1,["char"]=nth1(next, 2) + after + -1})
+		if (car1(next) == -1 and cadr1(next) == -1) then
 			return nil
 		else
-			bufc[2] = ({["line"]=bufc[2]["line"] + car1(next) + -1,["char"]=nth1(next, 2)})
-			return nil
+			if car1(next) == 1 then
+				bufc[2] = ({["line"]=bufc[2]["line"] + car1(next) + -1,["char"]=nth1(next, 2) + after + -1})
+				return nil
+			else
+				bufc[2] = ({["line"]=bufc[2]["line"] + car1(next) + -1,["char"]=nth1(next, 2)})
+				return nil
+			end
 		end
 	elseif k == "q" then
 		local x

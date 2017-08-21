@@ -34,11 +34,17 @@
 (defun update ()
   (term/setCursorPos (unpack (slot-across (:char :line) .> imanager-vars :container :content 1 :buffers 1 2 <>)))
   (term/setCursorBlink true)
-  (update-container (.> imanager-vars :container) (os/pullEvent))
+  (with (ev (list (os/pullEvent)))
+    (cond
+      [(and (= (car ev) "char") (= (nth ev 2) ":"))
+        (term/setCursorPos 1 (.> screen-buffer :height))
+        (term/write ":")
+        (io/read)]
+      [true (update-container (.> imanager-vars :container) ev)]))
   (with (cont (.> imanager-vars :container))
     (draw-container cont `(1 1 ,(.> screen-buffer :width) ,(.> screen-buffer :height)))))
 
-(defun update-container (cont &ev)
+(defun update-container (cont ev)
   (for-each child (.> cont :content)
     (if (.> child :orient)
       (update-container child)
